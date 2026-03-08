@@ -1,0 +1,94 @@
+---
+title: "Staggered animations"
+description: "Create staggered list animations"
+---
+
+## Staggered Animations
+
+Create sequential entrance animations for list items using delays:
+
+### CSS-Based Stagger
+
+```typescript
+{
+    key: 'feature-list',
+    listContainer: '.features',
+    trigger: 'viewEnter',
+    params: { type: 'once', threshold: 0.2 },
+    effects: [{
+        key: 'feature-list',
+        listContainer: '.features',
+        keyframeEffect: {
+            name: 'stagger-fade',
+            keyframes: [
+                { opacity: '0', transform: 'translateX(-30px)' },
+                { opacity: '1', transform: 'translateX(0)' }
+            ]
+        },
+        duration: 500,
+        easing: 'ease-out'
+    }]
+}
+```
+
+```css
+/* Add stagger delay via CSS */
+.features > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.features > *:nth-child(2) {
+  animation-delay: 100ms;
+}
+.features > *:nth-child(3) {
+  animation-delay: 200ms;
+}
+.features > *:nth-child(4) {
+  animation-delay: 300ms;
+}
+.features > *:nth-child(5) {
+  animation-delay: 400ms;
+}
+
+/* Or use a formula for unlimited items */
+.features > * {
+  animation-delay: calc(var(--stagger-index, 0) * 100ms);
+}
+```
+
+### Programmatic Stagger
+
+For more control, use data attributes:
+
+```html
+<interact-element data-interact-key="animated-list">
+  <ul class="list">
+    <li data-delay="0">Item 1</li>
+    <li data-delay="100">Item 2</li>
+    <li data-delay="200">Item 3</li>
+  </ul>
+</interact-element>
+```
+
+```typescript
+{
+    key: 'animated-list',
+    listContainer: '.list',
+    trigger: 'viewEnter',
+    effects: [{
+        key: 'animated-list',
+        listContainer: '.list',
+        customEffect: (element) => {
+            const delay = parseInt(element.dataset.delay || '0');
+            return element.animate([
+                { opacity: 0, transform: 'scale(0.8)' },
+                { opacity: 1, transform: 'scale(1)' }
+            ], {
+                duration: 400,
+                delay,
+                fill: 'both',
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
+            });
+        }
+    }]
+}
+```

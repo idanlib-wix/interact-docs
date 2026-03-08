@@ -1,0 +1,308 @@
+---
+title: "Introduction"
+description: "Create interactions with lists"
+---
+
+Working with dynamic lists is one of the most powerful features of `@wix/interact`. This guide explains how to create animations for lists, handle dynamic content, and optimize performance for large datasets.
+
+When working with lists, you have two main approaches:
+
+1. **Individual Elements** - Treat each list item as a separate interaction
+2. **List Container** - Use `listContainer` to target all items in a collection
+
+Use the `listContainer` approach for:
+
+- Dynamic lists that change (items added/removed)
+- Large lists (100+ items)
+- Staggered animations
+- Consistent behavior across all items
+
+## Performance Optimization
+
+### When to Use listContainer
+
+**✅ Use listContainer for:**
+
+- Lists with 2+ items
+- Dynamic lists (items added/removed)
+- Consistent interactions across all items
+- Staggered entrance effects
+- Lists that grow (infinite scroll, pagination)
+
+### Performance Best Practices
+
+#### Efficient Animations
+
+```typescript
+// ✅ Good - GPU-accelerated properties
+{
+    keyframeEffect: {
+        name: 'efficient',
+        keyframes: [
+            { opacity: '0', transform: 'translateY(20px)' },
+            { opacity: '1', transform: 'translateY(0)' }
+        ]
+    }
+}
+
+// ❌ Avoid - causes reflows
+{
+    keyframeEffect: {
+        name: 'inefficient',
+        keyframes: [
+            { height: '0px', marginTop: '0px' },
+            { height: '200px', marginTop: '20px' }
+        ]
+    }
+}
+```
+
+#### Limit Active Observers
+
+```typescript
+// ✅ Good - One container for all items
+{
+  listContainer: ".products"; // One observer
+}
+
+// ❌ Avoid - Multiple containers
+{
+  listContainer: ".product-1"; // Creates many observers
+}
+```
+
+## Advanced Patterns
+
+### Grid-to-List Layout Transitions
+
+```typescript
+const layoutConfig = {
+  conditions: {
+    "grid-view": {
+      type: "media",
+      predicate: "(min-width: 768px)",
+    },
+    "list-view": {
+      type: "media",
+      predicate: "(max-width: 767px)",
+    },
+  },
+  interactions: [
+    {
+      key: "adaptive-items",
+      listContainer: ".items",
+      trigger: "viewEnter",
+      conditions: ["grid-view"],
+      effects: [
+        {
+          key: "adaptive-items",
+          listContainer: ".items",
+          keyframeEffect: {
+            name: "grid-fade",
+            keyframes: [
+              { opacity: "0", transform: "scale(0.9)" },
+              { opacity: "1", transform: "scale(1)" },
+            ],
+          },
+          duration: 500,
+        },
+      ],
+    },
+    {
+      key: "adaptive-items",
+      listContainer: ".items",
+      trigger: "viewEnter",
+      conditions: ["list-view"],
+      effects: [
+        {
+          key: "adaptive-items",
+          listContainer: ".items",
+          keyframeEffect: {
+            name: "list-slide",
+            keyframes: [
+              { opacity: "0", transform: "translateX(-20px)" },
+              { opacity: "1", transform: "translateX(0)" },
+            ],
+          },
+          duration: 400,
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Real-World Examples
+
+### E-commerce Product Grid
+
+```typescript
+const productGridConfig = {
+  interactions: [
+    // Entrance animation
+    {
+      key: "products",
+      listContainer: ".product-grid",
+      trigger: "viewEnter",
+      params: { type: "once", threshold: 0.1 },
+      effects: [
+        {
+          key: "products",
+          listContainer: ".product-grid",
+          keyframeEffect: {
+            name: "product-entrance",
+            keyframes: [
+              { opacity: "0", transform: "translateY(40px) scale(0.95)" },
+              { opacity: "1", transform: "translateY(0) scale(1)" },
+            ],
+          },
+          duration: 700,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        },
+      ],
+    },
+    // Hover effect
+    {
+      key: "products",
+      listContainer: ".product-grid",
+      selector: ".product-card",
+      trigger: "hover",
+      effects: [
+        {
+          key: "products",
+          listContainer: ".product-grid",
+          selector: ".product-card",
+          keyframeEffect: {
+            name: "card-lift",
+            keyframes: [
+              {
+                transform: "translateY(0)",
+                boxShadow: "0 4px 12px rgb(0 0 0 / 0.1)",
+              },
+              {
+                transform: "translateY(-8px)",
+                boxShadow: "0 16px 32px rgb(0 0 0 / 0.15)",
+              },
+            ],
+          },
+          duration: 250,
+        },
+        {
+          key: "products",
+          listContainer: ".product-grid",
+          selector: ".product-image img",
+          keyframeEffect: {
+            name: "image-zoom",
+            keyframes: [
+              { transform: "scale(1)" },
+              { transform: "scale(1.05)" },
+            ],
+          },
+          duration: 300,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Dynamic To-Do List
+
+```typescript
+const todoConfig = {
+  interactions: [
+    // New item animation
+    {
+      key: "todos",
+      listContainer: ".todo-list",
+      trigger: "viewEnter",
+      params: { type: "repeat" },
+      effects: [
+        {
+          key: "todos",
+          listContainer: ".todo-list",
+          keyframeEffect: {
+            name: "todo-add",
+            keyframes: [
+              { opacity: "0", transform: "translateX(-30px) scale(0.9)" },
+              { opacity: "1", transform: "translateX(0) scale(1)" },
+            ],
+          },
+          duration: 400,
+          easing: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        },
+      ],
+    },
+    // Complete animation
+    {
+      key: "todos",
+      listContainer: ".todo-list",
+      selector: ".todo-checkbox",
+      trigger: "click",
+      effects: [
+        {
+          key: "todos",
+          listContainer: ".todo-list",
+          selector: ".todo-item",
+          transition: {
+            duration: 300,
+            styleProperties: [
+              { name: "opacity", value: "0.5" },
+              { name: "text-decoration", value: "line-through" },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Image Gallery with Lightbox
+
+```typescript
+const galleryConfig = {
+  interactions: [
+    // Grid entrance
+    {
+      key: "gallery",
+      listContainer: ".gallery-grid",
+      trigger: "viewEnter",
+      params: { type: "once", threshold: 0.1 },
+      effects: [
+        {
+          key: "gallery",
+          listContainer: ".gallery-grid",
+          keyframeEffect: {
+            name: "gallery-fade",
+            keyframes: [
+              { opacity: "0", filter: "blur(10px)" },
+              { opacity: "1", filter: "blur(0)" },
+            ],
+          },
+          duration: 800,
+        },
+      ],
+    },
+    // Hover overlay
+    {
+      key: "gallery",
+      listContainer: ".gallery-grid",
+      selector: ".gallery-item",
+      trigger: "hover",
+      effects: [
+        {
+          key: "gallery",
+          listContainer: ".gallery-grid",
+          selector: ".gallery-overlay",
+          keyframeEffect: {
+            name: "overlay-reveal",
+            keyframes: [{ opacity: "0" }, { opacity: "1" }],
+          },
+          duration: 250,
+        },
+      ],
+    },
+  ],
+};
+```

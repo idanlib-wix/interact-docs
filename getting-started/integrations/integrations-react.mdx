@@ -1,0 +1,437 @@
+---
+title: "Integrate with React"
+description: "Use Interact with React"
+---
+
+This guide covers how to use `@wix/interact` with React applications. The library provides a dedicated React entry point with components and utilities designed for seamless React integration.
+
+## Installation
+
+```bash
+npm install @wix/interact
+```
+
+## Import
+
+```typescript
+import { Interact, Interaction } from "@wix/interact/react";
+```
+
+## Quick start
+
+```tsx
+import React, { useEffect } from "react";
+import { Interact, Interaction } from "@wix/interact/react";
+
+const config = {
+  interactions: [
+    {
+      key: "my-button",
+      trigger: "hover",
+      effects: [
+        {
+          keyframeEffect: {
+            name: "scale-up",
+            keyframes: [{ transform: "scale(1.1)" }],
+          },
+          duration: 200,
+        },
+      ],
+    },
+  ],
+};
+
+function Button() {
+  return (
+    <Interaction tagName="button" interactKey="my-button">
+      Hover me!
+    </Interaction>
+  );
+}
+
+function App() {
+  useEffect(() => {
+    const instance = Interact.create(config);
+    return () => instance.destroy();
+  }, []);
+
+  return <Button />;
+}
+```
+
+## Configuration patterns
+
+### Basic setup with useEffect
+
+```tsx
+import React, { useEffect } from "react";
+import { Interact, Interaction, InteractConfig } from "@wix/interact/react";
+
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "fade-card",
+      trigger: "viewEnter",
+      effects: [
+        {
+          keyframeEffect: {
+            name: "fade-in",
+            keyframes: [
+              { opacity: 0, transform: "translateY(20px)" },
+              { opacity: 1, transform: "translateY(0)" },
+            ],
+          },
+          duration: 600,
+          easing: "ease-out",
+        },
+      ],
+    },
+  ],
+};
+
+function App() {
+  useEffect(() => {
+    const instance = Interact.create(config);
+
+    // Cleanup on unmount
+    return () => {
+      instance.destroy();
+    };
+  }, []);
+
+  return (
+    <Interaction tagName="div" interactKey="fade-card" className="card">
+      <h2>Animated Card</h2>
+      <p>This card fades in when it enters the viewport.</p>
+    </Interaction>
+  );
+}
+```
+
+### Custom hook for reusability
+
+```tsx
+import { useEffect, useRef } from "react";
+import { Interact, InteractConfig } from "@wix/interact/react";
+
+export function useInteract(config: InteractConfig) {
+  const instanceRef = useRef<Interact | null>(null);
+
+  useEffect(() => {
+    instanceRef.current = Interact.create(config);
+
+    return () => {
+      instanceRef.current?.destroy();
+      instanceRef.current = null;
+    };
+  }, [config]);
+
+  return instanceRef;
+}
+
+// Usage
+function MyComponent() {
+  useInteract(config);
+
+  return (
+    <Interaction tagName="div" interactKey="my-element">
+      Content
+    </Interaction>
+  );
+}
+```
+
+### Multiple instances
+
+```tsx
+import React, { useEffect } from "react";
+import { Interact, Interaction } from "@wix/interact/react";
+
+const heroConfig = {
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter",
+      effects: [
+        /* ... */
+      ],
+    },
+  ],
+};
+
+const cardsConfig = {
+  interactions: [
+    {
+      key: "card",
+      trigger: "hover",
+      effects: [
+        /* ... */
+      ],
+    },
+  ],
+};
+
+function App() {
+  useEffect(() => {
+    const heroInstance = Interact.create(heroConfig);
+    const cardsInstance = Interact.create(cardsConfig);
+
+    return () => {
+      heroInstance.destroy();
+      cardsInstance.destroy();
+    };
+  }, []);
+
+  return (
+    <>
+      <Interaction tagName="section" interactKey="hero">
+        <h1>Welcome</h1>
+      </Interaction>
+
+      <Interaction tagName="article" interactKey="card">
+        <h2>Card 1</h2>
+      </Interaction>
+
+      <Interaction tagName="article" interactKey="card">
+        <h2>Card 2</h2>
+      </Interaction>
+    </>
+  );
+}
+```
+
+## State-based interactions
+
+### Click toggle effects
+
+```tsx
+import React, { useEffect } from "react";
+import { Interact, Interaction, InteractConfig } from "@wix/interact/react";
+
+const config: InteractConfig = {
+  effects: {
+    expanded: {
+      transitionEffect: {
+        properties: ["max-height", "padding"],
+        from: { maxHeight: "0px", padding: "0" },
+        to: { maxHeight: "200px", padding: "16px" },
+      },
+      duration: 300,
+    },
+  },
+  interactions: [
+    {
+      key: "accordion",
+      trigger: "click",
+      selector: ".accordion-header",
+      effects: [{ effectId: "expanded", method: "toggle" }],
+    },
+  ],
+};
+
+function Accordion() {
+  useEffect(() => {
+    const instance = Interact.create(config);
+    return () => instance.destroy();
+  }, []);
+
+  return (
+    <Interaction tagName="div" interactKey="accordion" className="accordion">
+      <button className="accordion-header">Toggle</button>
+      <div className="accordion-content">
+        <p>Expandable content here</p>
+      </div>
+    </Interaction>
+  );
+}
+```
+
+### Accessing active effects
+
+```tsx
+import React, { useRef } from "react";
+import { Interact, Interaction } from "@wix/interact/react";
+
+function EffectAwareComponent() {
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  const checkEffects = () => {
+    const controller = Interact.getController("my-element");
+    if (controller) {
+      const activeEffects = controller.getActiveEffects();
+      console.log("Active effects:", activeEffects);
+    }
+  };
+
+  return (
+    <Interaction
+      tagName="div"
+      interactKey="my-element"
+      ref={elementRef}
+      onClick={checkEffects}
+    >
+      Click to check effects
+    </Interaction>
+  );
+}
+```
+
+## Lists and dynamic content
+
+### Animated lists
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { Interact, Interaction, InteractConfig } from "@wix/interact/react";
+
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "product-list",
+      trigger: "viewEnter",
+      listContainer: ".products",
+      effects: [
+        {
+          keyframeEffect: {
+            name: "slide-up",
+            keyframes: [
+              { opacity: 0, transform: "translateY(30px)" },
+              { opacity: 1, transform: "translateY(0)" },
+            ],
+          },
+          duration: 400,
+          stagger: 100, // Stagger animation for list items
+        },
+      ],
+    },
+  ],
+};
+
+function ProductList() {
+  const [products, setProducts] = useState([
+    { id: 1, name: "Product A" },
+    { id: 2, name: "Product B" },
+    { id: 3, name: "Product C" },
+  ]);
+
+  useEffect(() => {
+    const instance = Interact.create(config);
+    return () => instance.destroy();
+  }, []);
+
+  const addProduct = () => {
+    setProducts((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: `Product ${prev.length + 1}`,
+      },
+    ]);
+  };
+
+  return (
+    <Interaction tagName="div" interactKey="product-list">
+      <button onClick={addProduct}>Add Product</button>
+      <div className="products">
+        {products.map((product) => (
+          <div key={product.id} className="product-card">
+            {product.name}
+          </div>
+        ))}
+      </div>
+    </Interaction>
+  );
+}
+```
+
+## Server-side rendering (SSR)
+
+### Next.js App Router
+
+```tsx
+// app/components/InteractiveCard.tsx
+"use client";
+
+import { useEffect } from "react";
+import { Interact, Interaction } from "@wix/interact/react";
+
+const config = {
+  /* ... */
+};
+
+export function InteractiveCard({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    const instance = Interact.create(config);
+    return () => instance.destroy();
+  }, []);
+
+  return (
+    <Interaction tagName="div" interactKey="card">
+      {children}
+    </Interaction>
+  );
+}
+```
+
+### Next.js Pages Router
+
+```tsx
+// pages/index.tsx
+import { useEffect } from "react";
+import { Interact, Interaction } from "@wix/interact/react";
+
+const config = {
+  /* ... */
+};
+
+export default function Home() {
+  useEffect(() => {
+    // Only runs on client
+    const instance = Interact.create(config);
+    return () => instance.destroy();
+  }, []);
+
+  return (
+    <Interaction tagName="main" interactKey="hero">
+      <h1>Welcome</h1>
+    </Interaction>
+  );
+}
+```
+
+## Troubleshooting
+
+### React StrictMode
+
+React's StrictMode double-invokes effects in development. The library handles this gracefully:
+
+```tsx
+// This works correctly even in StrictMode
+useEffect(() => {
+  const instance = Interact.create(config);
+  return () => instance.destroy();
+}, []);
+```
+
+### Memory leaks
+
+Always clean up instances:
+
+```tsx
+useEffect(() => {
+  const instance = Interact.create(config);
+
+  // Always return cleanup function
+  return () => {
+    instance.destroy();
+  };
+}, []);
+```
+
+## See also
+
+- [Getting Started](../guides/getting-started.md) - Basic concepts and setup
+- [Interact Class](../api/interact-class.md) - Main class API
+- [InteractionController](../api/interaction-controller.md) - Controller API
+- [Configuration Guide](../guides/configuration-structure.md) - Configuration options
+- [Type Definitions](../api/types.md) - TypeScript types

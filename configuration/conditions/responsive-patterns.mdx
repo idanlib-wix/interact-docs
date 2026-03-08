@@ -1,0 +1,142 @@
+---
+title: "Responsive patterns"
+description: "Create responsive interactions"
+---
+
+## Responsive Interaction Patterns
+
+### Desktop vs Mobile Interactions
+
+```typescript
+const responsiveConfig: InteractConfig = {
+  conditions: {
+    desktop: {
+      type: "media",
+      predicate: "(min-width: 1024px)",
+    },
+    tablet: {
+      type: "media",
+      predicate: "(min-width: 768px) and (max-width: 1023px)",
+    },
+    mobile: {
+      type: "media",
+      predicate: "(max-width: 767px)",
+    },
+  },
+
+  interactions: [
+    // Desktop: Hover effects
+    {
+      key: "product-card",
+      trigger: "hover",
+      conditions: ["desktop"],
+      effects: [
+        {
+          key: "product-card",
+          keyframeEffect: {
+            name: "product-card-kf-desktop",
+            keyframes: [
+              {
+                transform: "translateY(0)",
+                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              },
+              {
+                transform: "translateY(-8px)",
+                boxShadow: "0 20px 25px rgba(0,0,0,0.15)",
+              },
+            ],
+          },
+          duration: 200,
+          easing: "ease-out",
+        },
+      ],
+    },
+
+    // Mobile: Touch feedback
+    {
+      key: "product-card",
+      trigger: "click",
+      conditions: ["mobile"],
+      effects: [
+        {
+          key: "product-card",
+          keyframeEffect: {
+            name: "product-card-kf-mobile",
+            keyframes: [
+              { transform: "scale(1)" },
+              { transform: "scale(0.98)" },
+              { transform: "scale(1)" },
+            ],
+          },
+          duration: 150,
+          easing: "ease-in-out",
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Accessibility-Aware Animations
+
+```typescript
+const accessibleConfig: InteractConfig = {
+  conditions: {
+    "motion-ok": {
+      type: "media",
+      predicate: "(prefers-reduced-motion: no-preference)",
+    },
+    "motion-reduced": {
+      type: "media",
+      predicate: "(prefers-reduced-motion: reduce)",
+    },
+    "high-contrast": {
+      type: "media",
+      predicate: "(prefers-contrast: high)",
+    },
+  },
+
+  interactions: [
+    // Full animation for users who prefer motion
+    {
+      key: "hero-title",
+      trigger: "viewEnter",
+      conditions: ["motion-ok"],
+      params: { type: "once", threshold: 0.3 },
+      effects: [
+        {
+          key: "hero-title",
+          keyframeEffect: {
+            name: "fade-move",
+            keyframes: [
+              { opacity: "0", transform: "translateY(50px) rotate(-2deg)" },
+              { opacity: "1", transform: "translateY(0) rotate(0deg)" },
+            ],
+          },
+          duration: 800,
+          easing: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        },
+      ],
+    },
+
+    // Subtle animation for reduced motion users
+    {
+      key: "hero-title",
+      trigger: "viewEnter",
+      conditions: ["motion-reduced"],
+      params: { type: "once", threshold: 0.3 },
+      effects: [
+        {
+          key: "hero-title",
+          keyframeEffect: {
+            name: "fade",
+            keyframes: [{ opacity: "0" }, { opacity: "1" }],
+          },
+          duration: 300,
+          easing: "ease-out",
+        },
+      ],
+    },
+  ],
+};
+```

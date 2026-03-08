@@ -1,0 +1,76 @@
+---
+title: "Common Patterns"
+description: "Common patterns for building interactions"
+---
+
+TODO move to later in the Configuration section.
+
+## Hover with scale and rotation
+
+```javascript
+{
+    key: 'my-element',
+    trigger: 'hover',
+    effects: [
+        {
+            key: 'my-element',
+            keyframeEffect: {
+                name: 'twist',
+                keyframes: [
+                    { transform: 'scale(1) rotate(0deg)' },
+                    { transform: 'scale(1.1) rotate(5deg)' }
+                ]
+            },
+            duration: 200,
+            easing: 'ease-out'
+        }
+    ]
+}
+```
+
+## Click to toggle state
+
+```javascript
+{
+    key: 'my-button',
+    trigger: 'click',
+    params: { method: 'toggle' },
+    effects: [
+        {
+            key: 'my-content',
+            effectId: 'expand',
+        }
+    ]
+}
+```
+
+## Entrance animation on viewport entry
+
+```javascript
+{
+    key: 'my-element',
+    trigger: 'viewEnter',
+    effects: [
+        {
+            key: 'my-element',
+            namedEffect: { type: 'FadeIn' },
+            duration: 800,
+            easing: 'ease-out'
+        }
+    ]
+}
+```
+
+<Callout type="info">
+  Using `namedEffect` requires registering effects first with
+  `Interact.registerEffects(...)` (presets from `@wix/motion-presets` or your
+  own custom effects). See [Installation](#optional-animation-presets).
+</Callout>
+
+<Callout type="tip">
+  To prevent a flash of content before entrance animations start, use the
+  `generate()` function to create CSS that hides elements until their animation
+  triggers. See [Entrance
+  Animations](../examples/entrance-animations.md#preventing-flash-of-unstyled-content-fouc)
+  for details.
+</Callout>

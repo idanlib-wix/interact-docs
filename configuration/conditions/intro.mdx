@@ -1,0 +1,581 @@
+---
+title: "Introduction"
+description: "Create interactions that run only under certain conditions"
+---
+
+Conditions allow you to create responsive interactions that adapt to different screen sizes, user preferences, and environmental factors. They act as filters that determine when interactions should be active. They enable you to:
+
+- **Create responsive animations** that work across devices
+- **Respect user preferences** like reduced motion
+- **Adapt to container sizes** with container queries
+- **Build progressive enhancement** for different capabilities
+
+This guide explains how to build adaptive interactions using media and container conditions.
+
+## Types of Conditions
+
+### Media Conditions
+
+Use CSS media queries to target device characteristics:
+
+```typescript
+{
+    conditions: {
+        'desktop-only': {
+            type: 'media',
+            predicate: '(min-width: 768px)'
+        },
+        'mobile-only': {
+            type: 'media',
+            predicate: '(max-width: 767px)'
+        },
+        'prefers-motion': {
+            type: 'media',
+            predicate: '(prefers-reduced-motion: no-preference)'
+        }
+    }
+}
+```
+
+### Container Conditions
+
+Use container queries to respond to element size:
+
+```typescript
+{
+    conditions: {
+        'large-card': {
+            type: 'container',
+            predicate: '(min-width: 400px)'
+        },
+        'tall-container': {
+            type: 'container',
+            predicate: '(min-height: 300px)'
+        }
+    }
+}
+```
+
+## Conditional Interactions
+
+### Defining Conditions
+
+Create reusable conditions for responsive design:
+
+```typescript
+const responsiveConfig: InteractConfig = {
+  conditions: {
+    "desktop-only": {
+      type: "media",
+      predicate: "(min-width: 768px)",
+    },
+    "mobile-only": {
+      type: "media",
+      predicate: "(max-width: 767px)",
+    },
+    "prefers-motion": {
+      type: "media",
+      predicate: "(prefers-reduced-motion: no-preference)",
+    },
+    "large-container": {
+      type: "container",
+      predicate: "(min-width: 600px)",
+    },
+  },
+
+  interactions: [
+    // Desktop hover effects
+    {
+      key: "hero-image",
+      trigger: "hover",
+      conditions: ["desktop-only", "prefers-motion"],
+      effects: [
+        {
+          key: "hero-image",
+          namedEffect: {
+            type: "Scale",
+          },
+          duration: 400,
+        },
+      ],
+    },
+
+    // Mobile tap effects
+    {
+      key: "hero-image",
+      trigger: "click",
+      conditions: ["mobile-only"],
+      effects: [
+        {
+          key: "hero-image",
+          namedEffect: {
+            type: "Pulse",
+          },
+          duration: 300,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Using Conditions in Effects
+
+Apply conditions at the effect level:
+
+```typescript
+{
+    key: 'animated-section',
+    trigger: 'viewEnter',
+    effects: [
+        // Basic fade for all devices
+        {
+            key: 'animated-section',
+            namedEffect: {
+                type: 'FadeIn'
+            },
+            duration: 600
+        },
+        // Enhanced animation only on desktop
+        {
+            key: 'animated-section',
+            selector: ' .particles',
+            namedEffect: {
+                type: 'SlideUp'
+            },
+            duration: 800,
+            delay: 200,
+            conditions: ['desktop-only', 'prefers-motion']
+        }
+    ]
+}
+```
+
+## Cascading of effects
+
+Interact allows you to apply multiple effects on the same target and have them cascade, just like they do in CSS.
+This allows you to have different variations of effects for different `media`/`contianer` `conditions` and have only one of them apply, base on the current environment of the user.
+
+**Important**: In order to use this cascading behavior, `conditions` need to be set on the Effect-level, and not on the Interaction-level.
+
+The cascading logic works as follows:
+
+1. Effects that are grouped in the same `effects` array under the same interaction
+2. Effects that share the same `key`
+3. Last effect in the `effects` array wins - just like in CSS
+
+Here is a mobile-first example for a slide effect of a card:
+
+```typescript
+const responsiveConfig: InteractConfig = {
+  conditions: {
+    desktop: {
+      type: "media",
+      predicate: "(min-width: 1024px)",
+    },
+    tablet: {
+      type: "media",
+      predicate: "(min-width: 768px) and (max-width: 1023px)",
+    },
+    mobile: {
+      type: "media",
+      predicate: "(max-width: 767px)",
+    },
+  },
+  effects: {
+    "light-slide": {
+      keyframeEffect: {
+        name: "light-slide",
+        keyframes: [
+          { transform: "translateY(-100px)" },
+          { transform: "translateY(0)" },
+        ],
+      },
+      duration: 400,
+      easing: "ease-out",
+    },
+    "medium-slide": {
+      keyframeEffect: {
+        name: "medium-slide",
+        keyframes: [
+          { transform: "translateY(-50%)" },
+          { transform: "translateY(0)" },
+        ],
+      },
+      duration: 400,
+      easing: "ease-in-out",
+    },
+    "hard-slide": {
+      keyframeEffect: {
+        name: "hard-slide",
+        keyframes: [
+          { transform: "translateY(-100%)" },
+          { transform: "translateY(0)" },
+        ],
+      },
+      duration: 600,
+      easing: "backOut",
+    },
+  },
+  interactions: [
+    {
+      key: ".product-card",
+      trigger: "viewEnter",
+      effects: [
+        {
+          conditions: ["desktop"],
+          effectId: "light-slide",
+        },
+        {
+          conditions: ["tablet"],
+          effectId: "medium-slide",
+        },
+        {
+          conditions: ["mobile"],
+          effectId: "hard-slide",
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Advanced Condition Patterns
+
+### Combining Multiple Conditions
+
+```typescript
+const complexConfig: InteractConfig = {
+  conditions: {
+    desktop: {
+      type: "media",
+      predicate: "(min-width: 1024px)",
+    },
+    "motion-ok": {
+      type: "media",
+      predicate: "(prefers-reduced-motion: no-preference)",
+    },
+    "high-res": {
+      type: "media",
+      predicate: "(min-resolution: 144dpi)",
+    },
+    "wide-container": {
+      type: "container",
+      predicate: "(min-width: 600px)",
+    },
+  },
+
+  interactions: [
+    // Complex animation: desktop + motion ok + wide container
+    {
+      key: "hero-animation",
+      trigger: "viewEnter",
+      conditions: ["desktop", "motion-ok", "wide-container"],
+      effects: [
+        {
+          key: "hero-background",
+          keyframeEffect: {
+            name: "focus-background",
+            keyframes: [
+              { transform: "scale(1.1)", filter: "blur(2px)" },
+              { transform: "scale(1)", filter: "blur(0)" },
+            ],
+          },
+          duration: 1200,
+          easing: "ease-out",
+        },
+        {
+          key: "hero-content",
+          keyframeEffect: {
+            name: "slide-content",
+            keyframes: [
+              { opacity: "0", transform: "translateY(80px)" },
+              { opacity: "1", transform: "translateY(0)" },
+            ],
+          },
+          duration: 800,
+          delay: 400,
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Real-World Examples
+
+### E-commerce Product Grid
+
+```typescript
+const productGridConfig: InteractConfig = {
+  conditions: {
+    desktop: {
+      type: "media",
+      predicate: "(min-width: 1024px)",
+    },
+    tablet: {
+      type: "media",
+      predicate: "(min-width: 768px) and (max-width: 1023px)",
+    },
+    mobile: {
+      type: "media",
+      predicate: "(max-width: 767px)",
+    },
+    "large-product-card": {
+      type: "container",
+      predicate: "(min-width: 300px)",
+    },
+    "motion-ok": {
+      type: "media",
+      predicate: "(prefers-reduced-motion: no-preference)",
+    },
+  },
+
+  interactions: [
+    // Desktop: Full hover experience
+    {
+      key: "product-card",
+      trigger: "hover",
+      conditions: ["desktop", "large-product-card", "motion-ok"],
+      effects: [
+        {
+          key: "product-image",
+          keyframeEffect: {
+            name: "scale-light",
+            keyframes: [
+              { transform: "scale(1)" },
+              { transform: "scale(1.05)" },
+            ],
+          },
+          duration: 300,
+        },
+        {
+          key: "product-overlay",
+          keyframeEffect: {
+            name: "slide-from-bottom",
+            keyframes: [
+              { opacity: "0", transform: "translateY(100%)" },
+              { opacity: "1", transform: "translateY(0)" },
+            ],
+          },
+          duration: 250,
+          delay: 50,
+        },
+        {
+          key: "quick-view-button",
+          keyframeEffect: {
+            name: "scale-medium",
+            keyframes: [
+              { opacity: "0", transform: "scale(0.8)" },
+              { opacity: "1", transform: "scale(1)" },
+            ],
+          },
+          duration: 200,
+          delay: 150,
+        },
+      ],
+    },
+
+    // Mobile: Touch feedback only
+    {
+      key: "product-card",
+      trigger: "click",
+      conditions: ["mobile"],
+      effects: [
+        {
+          key: "product-card",
+          keyframeEffect: {
+            name: "touch-feedback",
+            keyframes: [
+              { transform: "scale(1)" },
+              { transform: "scale(0.98)" },
+              { transform: "scale(1)" },
+            ],
+          },
+          duration: 150,
+        },
+      ],
+    },
+
+    // Tablet: Intermediate experience
+    {
+      key: "product-card",
+      trigger: "click",
+      conditions: ["tablet"],
+      effects: [
+        {
+          key: "product-overlay",
+          keyframeEffect: {
+            name: "fade",
+            keyframes: [{ opacity: "0" }, { opacity: "1" }],
+          },
+          duration: 200,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Responsive Navigation
+
+```typescript
+const navigationConfig: InteractConfig = {
+  conditions: {
+    mobile: {
+      type: "media",
+      predicate: "(max-width: 767px)",
+    },
+    desktop: {
+      type: "media",
+      predicate: "(min-width: 768px)",
+    },
+    "narrow-header": {
+      type: "container",
+      predicate: "(max-width: 800px)",
+    },
+  },
+
+  interactions: [
+    // Mobile: Slide menu
+    {
+      key: "mobile-menu-toggle",
+      trigger: "click",
+      conditions: ["mobile"],
+      params: { type: "alternate" },
+      effects: [
+        {
+          key: "mobile-menu",
+          keyframeEffect: {
+            name: "slide",
+            keyframes: [
+              { transform: "translateX(-100%)" },
+              { transform: "translateX(0)" },
+            ],
+          },
+          duration: 300,
+          easing: "ease-out",
+        },
+        {
+          key: "menu-overlay",
+          keyframeEffect: {
+            name: "fade",
+            keyframes: [{ opacity: "0" }, { opacity: "0.5" }],
+          },
+          duration: 300,
+        },
+      ],
+    },
+
+    // Desktop: Dropdown menus
+    {
+      key: "nav-item",
+      trigger: "hover",
+      conditions: ["desktop"],
+      effects: [
+        {
+          key: "dropdown-menu",
+          keyframeEffect: {
+            name: "hover-desktop-kf",
+            keyframes: [
+              { opacity: "0", transform: "translateY(-10px)" },
+              { opacity: "1", transform: "translateY(0)" },
+            ],
+          },
+          duration: 200,
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Best Practices
+
+### Condition Naming
+
+Use descriptive, semantic names:
+
+```typescript
+// Good
+'desktop-large': { type: 'media', predicate: '(min-width: 1200px)' }
+'touch-primary': { type: 'media', predicate: '(pointer: coarse)' }
+'motion-safe': { type: 'media', predicate: '(prefers-reduced-motion: no-preference)' }
+
+// Avoid
+'condition1': { type: 'media', predicate: '(min-width: 1200px)' }
+'big': { type: 'media', predicate: '(min-width: 1200px)' }
+```
+
+### Progressive Enhancement
+
+Start with basic functionality and enhance:
+
+```typescript
+const progressiveConfig: InteractConfig = {
+  interactions: [
+    // Base interaction - works everywhere
+    {
+      key: "button",
+      trigger: "click",
+      effects: [
+        {
+          key: "button",
+          namedEffect: "Pulse",
+          duration: 200,
+        },
+      ],
+    },
+
+    // Enhanced interaction - only on capable devices
+    {
+      key: "button",
+      trigger: "hover",
+      conditions: ["desktop", "motion-ok"],
+      effects: [
+        {
+          key: "button",
+          keyframeEffect: {
+            name: "shadow",
+            keyframes: [
+              {
+                transform: "translateY(0)",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+              },
+              {
+                transform: "translateY(-2px)",
+                boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+              },
+            ],
+          },
+          duration: 250,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Accessibility First
+
+Always provide accessible alternatives:
+
+```typescript
+// Always provide a motion-safe version
+{
+    key: 'animated-element',
+    trigger: 'viewEnter',
+    conditions: ['motion-ok'],
+    effects: [/* complex animation */]
+},
+{
+    key: 'animated-element',
+    trigger: 'viewEnter',
+    conditions: ['motion-reduced'],
+    effects: [/* simple fade or no animation */]
+}
+```
+
+## Debugging Conditions
+
+TBD

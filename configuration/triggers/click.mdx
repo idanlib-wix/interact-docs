@@ -1,0 +1,97 @@
+---
+title: "Click"
+description: "Learn about click trigger"
+---
+
+The `click` trigger responds to mouse clicks.
+
+<Tabs>
+  <Tab title="Basic">
+    When the button is clicked, the 
+    ```typescript
+    {
+        key: 'toggle-button',
+        trigger: 'click',
+        effects: [
+            {
+                key: 'sidebar',
+                keyframeEffect: {
+                    name: 'sidebar-toggle',
+                    keyframes: [
+                        { transform: 'translateX(-100%)' },
+                        { transform: 'translateX(0)' }
+                    ]
+                },
+                duration: 300
+            }
+        ]
+    }
+    ```
+  </Tab>
+  <Tab title="Advanced">
+
+    EXAMPLE DESCRIPTION
+
+    ```typescript
+    {
+        key: 'accordion-header',
+        trigger: 'click',
+        params: {
+            type: 'alternate'
+        },
+        effects: [
+            {
+                key: 'accordion-content',
+                keyframeEffect: {
+                    name: 'accordion',
+                    keyframes: [
+                        { clipPath: 'inset(0 0 100% 0)', translate: '0 -100%' },
+                        { clipPath: 'inset(0 0 0 0)', translate: '0 0' }
+                    ]
+                },
+                duration: 400
+            }
+        ]
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+You can also trigger more complex interactions. For example, the following interaction creates a menu toggle:
+
+```typescript
+{
+    key: 'menu-button',
+    trigger: 'click',
+    params: { type: 'alternate' },
+    effects: [
+        {
+            key: 'menu-icon',
+            keyframeEffect: {
+                name: 'spin',
+                keyframes: [
+                    { transform: 'rotate(0deg)' },
+                    { transform: 'rotate(45deg)' }
+                ]
+            },
+            duration: 200,
+            effectId: 'menu-icon-rotate'
+        },
+        {
+            key: 'mobile-menu',
+            keyframeEffect: {
+                name: 'slide',
+                keyframes: [
+                    { opacity: '0', transform: 'translateX(100%)' },
+                    { opacity: '1', transform: 'translateX(0)' }
+                ]
+            },
+            duration: 300,
+            delay: 100
+        }
+    ]
+}
+```
+
+TODO MORE TRIGGER TYPES

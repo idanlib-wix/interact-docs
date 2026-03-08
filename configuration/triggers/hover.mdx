@@ -1,0 +1,111 @@
+---
+title: "Hover"
+description: "Learn about hover trigger"
+---
+
+The `hover` trigger fires when a mouse cursor enters or leaves the specified element.
+
+<Tabs>
+  <Tab title="Basic">
+   When a mouse cursor hovers over `my-button`, it scales the button to `2` over 200ms:
+
+    ```typescript
+    {
+        key: 'my-button',
+        trigger: 'hover',
+        effects: [
+            {
+                keyframeEffect: {
+                    name: 'scale',
+                    keyframes: [
+                        { scale: 2 }
+                    ]
+                },
+                duration: 200
+            }
+        ]
+    }
+    ```
+
+  </Tab>
+  <Tab title="Advanced">
+
+    EXAMPLE DESCRIPTION
+    ```typescript
+    {
+        key: 'my-card',
+        trigger: 'hover',
+        params: {
+            type: 'alternate'
+        },
+        effects: [
+            {
+                keyframeEffect: {
+                    name: 'shadow',
+                    keyframes: [
+                        { transform: 'scale(1)', boxShadow: 'none' },
+                        { transform: 'scale(1.05)', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }
+                    ]
+                },
+                duration: 300,
+                easing: 'ease-out'
+            }
+        ]
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+You can also trigger more complex interactions. For example, the following interaction adds an image overlay when the mouse hovers over the image:
+
+```typescript
+  {
+      key: `${prefix}-circle-1`,
+      trigger: 'hover',
+      effects: [
+          {
+              transition: {
+                  duration: 400,
+                  easing: 'ease-out',
+                  styleProperties: [{ name: 'transform', value: 'scale(1.1)' }],
+              },
+          },
+          {
+              selector: '.fill-circle',
+              transition: {
+                  duration: 400,
+                  easing: 'ease-out',
+                  styleProperties: [{ name: 'transform', value: 'scale(1)' }],
+              },
+          },
+          {
+              key: `${prefix}-circle-2`,
+              transition: {
+                  duration: 400,
+                  easing: 'ease-out',
+                  styleProperties: [{ name: 'transform', value: 'translate(20px, -20px)' }],
+              },
+          },
+          {
+              key: `${prefix}-circle-3`,
+              transition: {
+                  duration: 400,
+                  easing: 'ease-out',
+                  styleProperties: [{ name: 'transform', value: 'translate(20px, -20px)' }],
+              },
+          },
+      ],
+  },
+```
+
+<iframe
+  src="../../public/demos/hover-effect-demo.html"
+  title="Hover trigger demo"
+  style={{
+    width: "100%",
+    height: "520px",
+    border: "1px solid #333",
+    borderRadius: "12px",
+  }}
+/>

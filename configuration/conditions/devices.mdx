@@ -1,0 +1,194 @@
+---
+title: "Device Types"
+description: "Specify conditions based on device type"
+---
+
+## Device-Specific Patterns
+
+### Touch vs Mouse Devices
+
+```typescript
+const deviceConfig: InteractConfig = {
+  conditions: {
+    "touch-device": {
+      type: "media",
+      predicate: "(hover: none) and (pointer: coarse)",
+    },
+    "mouse-device": {
+      type: "media",
+      predicate: "(hover: hover) and (pointer: fine)",
+    },
+    "stylus-device": {
+      type: "media",
+      predicate: "(hover: hover) and (pointer: coarse)",
+    },
+  },
+
+  interactions: [
+    // Mouse: Hover interactions
+    {
+      key: "interactive-button",
+      trigger: "hover",
+      conditions: ["mouse-device"],
+      effects: [
+        {
+          key: "interactive-button",
+          namedEffect: {
+            type: "Scale",
+          },
+          duration: 200,
+        },
+      ],
+    },
+
+    // Touch: Press feedback
+    {
+      key: "interactive-button",
+      trigger: "click",
+      conditions: ["touch-device"],
+      effects: [
+        {
+          key: "interactive-button",
+          keyframeEffect: {
+            name: "touch-feedback",
+            keyframes: [
+              { transform: "scale(1)", opacity: "1" },
+              { transform: "scale(0.95)", opacity: "0.8" },
+            ],
+          },
+          duration: 100,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Screen Size Breakpoints
+
+```typescript
+const breakpointConfig: InteractConfig = {
+  conditions: {
+    xs: {
+      type: "media",
+      predicate: "(max-width: 475px)",
+    },
+    sm: {
+      type: "media",
+      predicate: "(min-width: 476px) and (max-width: 640px)",
+    },
+    md: {
+      type: "media",
+      predicate: "(min-width: 641px) and (max-width: 768px)",
+    },
+    lg: {
+      type: "media",
+      predicate: "(min-width: 769px) and (max-width: 1024px)",
+    },
+    xl: {
+      type: "media",
+      predicate: "(min-width: 1025px)",
+    },
+  },
+
+  interactions: [
+    // Extra small: Minimal animations
+    {
+      key: "card",
+      trigger: "viewEnter",
+      conditions: ["xs"],
+      effects: [
+        {
+          key: "card",
+          namedEffect: "FadeIn",
+          duration: 400,
+        },
+      ],
+    },
+
+    // Large screens: Full animations
+    {
+      key: "card",
+      trigger: "viewEnter",
+      conditions: ["lg", "xl"],
+      effects: [
+        {
+          key: "card",
+          keyframeEffect: {
+            name: "fade-move",
+            keyframes: [
+              { opacity: "0", transform: "translateY(60px) scale(0.9)" },
+              { opacity: "1", transform: "translateY(0) scale(1)" },
+            ],
+          },
+          duration: 800,
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Orientation-Based Interactions
+
+```typescript
+const orientationConfig: InteractConfig = {
+  conditions: {
+    portrait: {
+      type: "media",
+      predicate: "(orientation: portrait)",
+    },
+    landscape: {
+      type: "media",
+      predicate: "(orientation: landscape)",
+    },
+    "mobile-portrait": {
+      type: "media",
+      predicate: "(max-width: 767px) and (orientation: portrait)",
+    },
+  },
+
+  interactions: [
+    // Portrait: Vertical animations
+    {
+      key: "gallery-item",
+      trigger: "viewEnter",
+      conditions: ["portrait"],
+      effects: [
+        {
+          key: "gallery-item",
+          keyframeEffect: {
+            name: "vertical-move",
+            keyframes: [
+              { transform: "translateY(50px)" },
+              { transform: "translateY(0)" },
+            ],
+          },
+          duration: 500,
+        },
+      ],
+    },
+
+    // Landscape: Horizontal animations
+    {
+      key: "gallery-item",
+      trigger: "viewEnter",
+      conditions: ["landscape"],
+      effects: [
+        {
+          key: "gallery-item",
+          keyframeEffect: {
+            name: "horizontal-move",
+            keyframes: [
+              { transform: "translateX(-50px)" },
+              { transform: "translateX(0)" },
+            ],
+          },
+          duration: 500,
+        },
+      ],
+    },
+  ],
+};
+```

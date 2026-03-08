@@ -1,0 +1,240 @@
+---
+title: "Selecting elements"
+description: "Select which elements to animate"
+---
+
+## Selecting elements
+
+You can specify the element to apply interactions on using the `selector` property. Wix Interact lets you specify exactly which element to use for interactions.
+
+### How Element Selection Works
+
+Use the interaction's `key` parameter to specify the element to run the interaction. Wix Interact follows a priority order to determine which element to run the interaction on:
+
+1. List Container (if specified): listContainer: '.item-list'. Matches child elements of the selected container using selector, or all its immediate children if not specified.
+2. Custom Selector (if specified): selector: '.my-element'.
+3. First Child (fallback): The first child element of the interact-element.
+
+> **Note**: When `interaction.key` is missing, the selected element defaults to `effect.key`. However, `selector` and `listContainer` are not inherited from the Interaction's config to the Effect's config. // TODO CLARIFY
+
+### Basic Selector Usage
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "card-container",
+      selector: ".card-image", // Select the image within the card
+      trigger: "hover",
+      effects: [
+        {
+          key: "card-container",
+          selector: ".card-overlay", // Select the overlay within the card
+          namedEffect: "FadeIn",
+          duration: 300,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Selector vs ListContainer
+
+- **`selector`**: Selects all matching elements using CSS selector (querySelectorAll)
+- **`listContainer`**: Selects a container for targeting its child elements for list-based interactions
+- **Combined**: Use both to select elements within list items
+
+```ts
+// Using selector with listContainer
+{
+  key: 'product-grid',
+  listContainer: '.products', // Container holding all product items
+  selector: '.product-image', // querySelectorAll finds all images as list items
+  trigger: 'hover',
+  effects: [
+    {
+      key: 'product-grid',
+      listContainer: '.products',
+      selector: '.product-overlay', // querySelectorAll finds all overlays as list items
+      namedEffect: {
+        type: 'FadeIn',
+      },
+      duration: 200,
+    },
+  ],
+}
+```
+
+## Advanced Selector Examples
+
+### Card Component with Multiple Interactive Areas
+
+```typescript
+const cardConfig: InteractConfig = {
+  effects: {
+    "card-lift": {
+      keyframeEffect: {
+        name: "card-lift",
+        keyframes: [
+          {
+            transform: "translateY(0px)",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          },
+          {
+            transform: "translateY(-4px)",
+            boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+          },
+        ],
+      },
+      duration: 200,
+      easing: "ease-out",
+    },
+    "image-zoom": {
+      keyframeEffect: {
+        name: "image-zoom",
+        keyframes: [{ transform: "scale(1)" }, { transform: "scale(1.05)" }],
+      },
+      duration: 300,
+      easing: "ease-out",
+    },
+    "button-pulse": {
+      keyframeEffect: {
+        name: "button-pulse",
+        keyframes: [
+          { transform: "scale(1)" },
+          { transform: "scale(1.1)" },
+          { transform: "scale(1)" },
+        ],
+      },
+      duration: 400,
+      easing: "ease-in-out",
+    },
+  },
+
+  interactions: [
+    // Hover on card image triggers card lift
+    {
+      key: "product-card",
+      selector: ".card-image", // Trigger area: just the image
+      trigger: "hover",
+      effects: [
+        {
+          key: "product-card",
+          selector: ".card-container", // Effect target: entire card
+          effectId: "card-lift",
+        },
+        {
+          key: "product-card",
+          selector: ".card-image img", // Effect target: image itself
+          effectId: "image-zoom",
+        },
+      ],
+    },
+
+    // Click on CTA button
+    {
+      key: "product-card",
+      selector: ".cta-button", // Trigger area: CTA button
+      trigger: "click",
+      effects: [
+        {
+          key: "product-card",
+          selector: ".cta-button", // Effect target: button itself
+          effectId: "button-pulse",
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Navigation Menu with Nested Selectors
+
+```typescript
+const navConfig: InteractConfig = {
+  effects: {
+    "dropdown-slide": {
+      keyframeEffect: {
+        name: "dropdown-slide",
+        keyframes: [
+          { opacity: "0", transform: "translateY(-10px)" },
+          { opacity: "1", transform: "translateY(0)" },
+        ],
+      },
+      duration: 250,
+      easing: "ease-out",
+    },
+    "menu-item-highlight": {
+      keyframeEffect: {
+        name: "menu-item-highlight",
+        keyframes: [
+          { backgroundColor: "transparent" },
+          { backgroundColor: "rgba(0, 123, 255, 0.1)" },
+        ],
+      },
+      duration: 150,
+      easing: "ease-out",
+    },
+  },
+
+  interactions: [
+    // Hover on main menu items
+    {
+      key: "main-nav",
+      listContainer: "nav",
+      selector: ".nav-item[data-has-dropdown]", // Only items with dropdowns
+      trigger: "hover",
+      effects: [
+        {
+          key: "main-nav",
+          listContainer: "nav",
+          selector: ".nav-item[data-has-dropdown] .dropdown-menu",
+          effectId: "dropdown-slide",
+        },
+        {
+          key: "main-nav",
+          listContainer: "nav",
+          selector: ".nav-item[data-has-dropdown]",
+          effectId: "menu-item-highlight",
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Gallery with Dynamic Item Selection
+
+```typescript
+const galleryConfig: InteractConfig = {
+  effects: {
+    "image-overlay": {
+      keyframeEffect: {
+        name: "image-overlay",
+        keyframes: [{ opacity: "0" }, { opacity: "1" }],
+      },
+      duration: 300,
+      easing: "ease-in-out",
+    },
+  },
+
+  interactions: [
+    // Gallery items with list container and selector
+    {
+      key: "image-gallery",
+      listContainer: ".gallery-grid", // Container with multiple items
+      selector: ".gallery-item img", // Image within each item
+      trigger: "hover",
+      effects: [
+        {
+          key: "image-gallery",
+          listContainer: ".gallery-grid",
+          selector: ".gallery-item .overlay", // Overlay within each item
+          effectId: "image-overlay",
+        },
+      ],
+    },
+  ],
+};
+```

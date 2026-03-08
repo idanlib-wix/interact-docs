@@ -1,0 +1,205 @@
+---
+title: "Organizing your interactions"
+description: "Organize your interactions"
+---
+
+## Organizing your interactions
+
+Having multiple interactions in a single project can become difficult to manage. Here are some best practices to keeping your interactions organized:
+
+### Inline Effects
+
+For simple interactions, define effects directly in the interaction's `effects` array:
+
+```ts
+const simpleConfig: InteractConfig = {
+  interactions: [
+    {
+      key: "button-1",
+      trigger: "hover",
+      effects: [
+        {
+          key: "button-1",
+          namedEffect: {
+            type: "Scale",
+          },
+          duration: 200,
+          easing: "ease-out",
+        },
+      ],
+    },
+    {
+      key: "button-2",
+      trigger: "click",
+      effects: [
+        {
+          key: "modal",
+          keyframeEffect: {
+            name: "scale-button",
+            keyframes: [
+              { opacity: "0", transform: "scale(0.9)" },
+              { opacity: "1", transform: "scale(1)" },
+            ],
+          },
+          duration: 300,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Reusable Effects
+
+For larger projects, define effects separately and reference them:
+
+```ts
+const complexConfig: InteractConfig = {
+  effects: {
+    // Reusable effect definitions
+    "button-hover": {
+      keyframeEffect: {
+        name: "button-hover",
+        keyframes: [
+          { transform: "scale(1)", boxShadow: "0 2px 4px rgba(0,0,0,0.1)" },
+          {
+            transform: "scale(1.05)",
+            boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+          },
+        ],
+      },
+      duration: 200,
+      easing: "ease-out",
+    },
+    "card-entrance": {
+      keyframeEffect: {
+        name: "card-entrance",
+        keyframes: [
+          { opacity: "0", transform: "translateY(30px)" },
+          { opacity: "1", transform: "translateY(0)" },
+        ],
+      },
+      duration: 600,
+      easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+    },
+    "modal-open": {
+      keyframeEffect: {
+        name: "modal-open",
+        keyframes: [
+          { opacity: "0", transform: "scale(0.95)" },
+          { opacity: "1", transform: "scale(1)" },
+        ],
+      },
+      duration: 300,
+      easing: "ease-out",
+    },
+  },
+
+  interactions: [
+    {
+      key: "btn-primary",
+      trigger: "hover",
+      effects: [
+        {
+          key: "btn-primary",
+          effectId: "button-hover", // Reference to reusable effect
+        },
+      ],
+    },
+    {
+      key: "product-card",
+      trigger: "viewEnter",
+      params: { type: "once", threshold: 0.3 },
+      effects: [
+        {
+          key: "product-card",
+          effectId: "card-entrance",
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Feature-Based Organization
+
+Organize by features or components:
+
+```typescript
+// buttons.ts
+export const buttonInteractions = [
+  {
+    key: "btn-primary",
+    trigger: "hover",
+    effects: [{ key: "btn-primary", effectId: "button-hover" }],
+  },
+  {
+    key: "btn-secondary",
+    trigger: "hover",
+    effects: [{ key: "btn-secondary", effectId: "button-hover-secondary" }],
+  },
+];
+
+// cards.ts
+export const cardInteractions = [
+  {
+    key: "card",
+    trigger: "viewEnter",
+    params: { type: "once" },
+    effects: [{ key: "card", effectId: "card-entrance" }],
+  },
+];
+
+// main.ts
+import { buttonInteractions } from "./buttons";
+import { cardInteractions } from "./cards";
+import { commonEffects } from "./effects";
+import { mediaConditions } from "./conditions";
+
+const config: InteractConfig = {
+  effects: commonEffects,
+  conditions: mediaConditions,
+  interactions: [...buttonInteractions, ...cardInteractions],
+};
+```
+
+### Component-Specific Configurations
+
+Create configurations for specific components:
+
+```typescript
+// NavbarConfig.ts
+export const createNavbarConfig = (navbarId: string): InteractConfig => ({
+  effects: {
+    "nav-slide": {
+      keyframeEffect: {
+        name: "nav-slide",
+        keyframes: [
+          { transform: "translateY(-100%)" },
+          { transform: "translateY(0)" },
+        ],
+      },
+      duration: 300,
+      easing: "ease-out",
+    },
+  },
+  interactions: [
+    {
+      key: navbarId,
+      selector: ".nav-toggle",
+      trigger: "click",
+      effects: [
+        {
+          key: navbarId,
+          selector: ".nav-menu",
+          effectId: "nav-slide",
+        },
+      ],
+    },
+  ],
+});
+
+// Usage
+const navConfig = createNavbarConfig("main-nav");
+Interact.create(navConfig);
+```

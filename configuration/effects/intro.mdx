@@ -1,0 +1,359 @@
+---
+title: "Introduction"
+description: "Configure effects and animations"
+---
+
+Effects define what visual changes happen when a trigger fires. `@wix/interact` integrates with `@wix/motion` to provide three types of effects: **Time Effects**, **Scrub Effects**, and **Transition Effects**.
+
+## Overview of effect types
+
+| Effect Type            | Best For                                    | Timing         | Use Cases                                   |
+| ---------------------- | ------------------------------------------- | -------------- | ------------------------------------------- |
+| **Time Effects**       | Traditional animations                      | Time-based     | Entrance animations, loop animations        |
+| **Scrub Effects**      | Scroll-driven and pointer-driven animations | Progress-based | Parallax effects, horizontal-sliding effect |
+| **Transition Effects** | CSS property changes                        | Duration-based | Micro-interactions, simple state changes    |
+
+## Combining multiple effects
+
+You can apply multiple effects to different targets from a single trigger:
+
+```typescript
+{
+    key: 'card-container',
+    trigger: 'hover',
+    effects: [
+        // Card itself
+        {
+            key: 'card-container',
+            keyframeEffect: {
+                name: 'card-shadow',
+                keyframes: [
+                    { transform: 'translateY(0)', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' },
+                    { transform: 'translateY(-8px)', boxShadow: '0 20px 25px rgba(0,0,0,0.15)' }
+                ]
+            },
+            duration: 200,
+            easing: 'ease-out'
+        },
+        // Card image
+        {
+            key: 'card-image',
+            namedEffect: {
+              type: 'Scale'
+            },
+            duration: 300,
+            easing: 'ease-out'
+        },
+        // Card title
+        {
+            key: 'card-title',
+            keyframeEffect: {
+                name: 'title-color',
+                keyframes: [
+                    { color: '#374151' },
+                    { color: '#2563eb' }
+                ]
+            },
+            duration: 150
+        },
+        // Card button
+        {
+            key: 'card-button',
+            transition: {
+                duration: 200,
+                styleProperties: [
+                    { name: 'opacity', value: '1' },
+                    { name: 'transform', value: 'translateY(0)' }
+                ]
+            }
+        }
+    ]
+}
+```
+
+## Animation targeting
+
+<Tabs>
+  <Tab title="Self-targeting">
+    Most common pattern - effect applies to the trigger element:
+
+    ```typescript
+    {
+        key: 'my-button',
+        trigger: 'hover',
+        effects: [
+            {
+                // Ommitted key means same as source
+                namedEffect: {
+                    type: 'Scale'
+                },
+                duration: 200
+            }
+        ]
+    }
+    ```
+
+  </Tab>
+  <Tab title="Cross-targeting">
+    Effect applies to different elements:
+
+    ```typescript
+    {
+        key: 'menu-trigger',
+        trigger: 'click',
+        effects: [
+            {
+                key: 'mobile-menu',     // Different element
+                namedEffect: {
+                    type: 'SlideIn',
+                    direction: 'down'
+                },
+                duration: 300
+            },
+            {
+                key: 'menu-overlay',    // Another different element
+                keyframeEffect: {
+                    name: 'fade',
+                    keyframes: [
+                        { opacity: '0' },
+                        { opacity: '1' }
+                    ]
+                },
+                duration: 200
+            }
+        ]
+    }
+    ```
+
+  </Tab>
+  <Tab title="Multiple targets">
+    Multiple targets with same effect:
+
+    ```typescript
+    {
+        key: 'master-control',
+        trigger: 'click',
+        effects: [
+            {
+                key: 'item-1',  // first target
+                namedEffect: {
+                    type: 'FadeIn'
+                },
+                duration: 400
+            },
+            {
+                key: 'item-2',  // second target
+                namedEffect: {
+                    type: 'FadeIn'
+                },
+                duration: 400
+            },
+            {
+                key: 'item-3',  // third target
+                namedEffect: {
+                    type: 'FadeIn'
+                },
+                duration: 400
+            }
+        ]
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+## Performance optimization
+
+### Use efficient properties
+
+Prefer these properties for smooth animations:
+
+- `transform` (translate, scale, rotate)
+- `opacity`
+- `filter`
+- Custom CSS properties
+
+Avoid animating:
+
+- Layout properties (`width`, `height`, `margin`, `padding`)
+- Position properties (`top`, `left`)
+- Properties that trigger reflow
+
+### Named effects vs keyframes
+
+```typescript
+// Preferred - optimized by @wix/motion
+{
+    namedEffect: {
+        type: 'FadeIn'
+    },
+    duration: 300
+}
+
+// Use sparingly - custom keyframes
+{
+    keyframeEffect: {
+        name: 'fade',
+        keyframes: [
+            { opacity: '0' },
+            { opacity: '1' }
+        ]
+    },
+    duration: 300
+}
+```
+
+## Real-world examples
+
+### Image gallery hover effect
+
+```typescript
+{
+    key: 'gallery-item',
+    trigger: 'hover',
+    effects: [
+        {
+            selector: 'img',
+            keyframeEffect: {
+                name: 'img-glow',
+                keyframes: [
+                    { transform: 'scale(1)', filter: 'brightness(1)' },
+                    { transform: 'scale(1.1)', filter: 'brightness(1.1)' }
+                ]
+            },
+            duration: 400,
+            easing: 'ease-out'
+        },
+        {
+            selector: '.overlay',
+            keyframeEffect: {
+                name: 'overlay-slide',
+                keyframes: [
+                    { opacity: '0', transform: 'translateY(100%)' },
+                    { opacity: '1', transform: 'translateY(0)' }
+                ]
+            },
+            duration: 300,
+            delay: 100
+        }
+    ]
+}
+```
+
+### Loading animation sequence
+
+```typescript
+{
+    key: 'app-loader',
+    trigger: 'viewEnter',
+    params: { type: 'once' },
+    effects: [
+        {
+            key: 'logo',
+            keyframeEffect: {
+                name: 'scale-fade',
+                keyframes: [
+                    { opacity: '0', transform: 'scale(0.8)' },
+                    { opacity: '1', transform: 'scale(1)' }
+                ]
+            },
+            duration: 600,
+            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+            effectId: 'logo-entrance'
+        }
+    ]
+},
+{
+    key: 'logo',
+    trigger: 'animationEnd',
+    params: { effectId: 'logo-entrance' },
+    effects: [
+        {
+            key: 'loading-text',
+            namedEffect: {
+                type: 'SlideUp'
+            },
+            duration: 400,
+            effectId: 'text-entrance'
+        }
+    ]
+}
+```
+
+### Scroll-triggered counter
+
+```typescript
+{
+    key: 'stats-section',
+    trigger: 'viewEnter',
+    params: { type: 'once', threshold: 0.5 },
+    effects: [
+        {
+            key: 'counter-1',
+            customEffect: (element, progress) => {
+                const targetValue = 1000;
+                const currentValue = Math.floor(targetValue * progress);
+                element.textContent = currentValue.toLocaleString();
+            },
+            duration: 2000,
+            easing: 'ease-out'
+        }
+    ]
+}
+```
+
+## Best practices
+
+### Animation timing
+
+- **Micro-interactions**: 100-300ms (hover, clicks)
+- **Page transitions**: 300-500ms
+- **Entrance animations**: 500-800ms
+- **Complex sequences**: 800-1200ms
+
+### Easing functions
+
+- **Entrances**: `ease-out` or `cubic-bezier(0.16, 1, 0.3, 1)`
+- **Exits**: `ease-in` or `cubic-bezier(0.4, 0, 1, 1)`
+- **Interactions**: `ease-in-out`
+- **Elastic effects**: `cubic-bezier(0.34, 1.56, 0.64, 1)`
+
+### Accessibility
+
+```typescript
+// Respect user preferences
+{
+    effects: {
+        'reduced-motion-entry': {
+            namedEffect: {
+                type: 'FadeIn'
+            },
+            duration: 600
+        }
+    },
+    interactions: [
+        {
+            key: 'animated-element',
+            trigger: 'viewEnter',
+            effects: [
+                {
+                    namedEffect: {
+                        type: 'SlideIn'
+                    },
+                    duration: 600
+                },
+                {
+                    effectId: 'reduced-motion-entry',
+                    conditions: ['reduced-motion']   // Only animate if user allows motion
+                }
+            ]
+        }
+    ],
+    conditions: {
+        'reduced-motion': {
+            type: 'media',
+            predicate: '(prefers-reduced-motion: reduce)'
+        }
+    }
+}
+```

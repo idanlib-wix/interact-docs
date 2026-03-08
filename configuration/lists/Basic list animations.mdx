@@ -1,0 +1,100 @@
+---
+title: "Basic list animations"
+description: "Create basic list animations"
+---
+
+## Basic List Animations
+
+### Using listContainer
+
+The `listContainer` property tells `@wix/interact` to:
+
+1. Find the container element
+2. Automatically track all its child elements
+3. Apply interactions to each child
+4. Watch for DOM additions/removals of direct children
+
+```typescript
+import { Interact } from "@wix/interact";
+
+const config = {
+  interactions: [
+    {
+      key: "product-grid",
+      listContainer: ".grid", // Container selector
+      trigger: "viewEnter",
+      params: { type: "once", threshold: 0.1 },
+      effects: [
+        {
+          key: "product-grid",
+          listContainer: ".grid", // Target the same container
+          keyframeEffect: {
+            name: "fade-slide",
+            keyframes: [
+              { opacity: "0", transform: "translateY(20px)" },
+              { opacity: "1", transform: "translateY(0)" },
+            ],
+          },
+          duration: 600,
+          easing: "ease-out",
+        },
+      ],
+    },
+  ],
+};
+
+Interact.create(config);
+```
+
+```html
+<interact-element data-interact-key="product-grid">
+  <div class="grid">
+    <div class="item">Product 1</div>
+    <div class="item">Product 2</div>
+    <div class="item">Product 3</div>
+    <!-- More items... -->
+  </div>
+</interact-element>
+```
+
+### Combining listContainer with selector
+
+Use both properties to target specific elements within each list item:
+
+```typescript
+{
+    key: 'gallery',
+    listContainer: '.gallery-grid',    // Container with items
+    selector: '.gallery-item img',     // Image in each item
+    trigger: 'hover',
+    effects: [{
+        key: 'gallery',
+        listContainer: '.gallery-grid',
+        selector: '.gallery-item .overlay',  // Different target within item
+        keyframeEffect: {
+            name: 'reveal-overlay',
+            keyframes: [
+                { opacity: '0', transform: 'translateY(100%)' },
+                { opacity: '1', transform: 'translateY(0)' }
+            ]
+        },
+        duration: 300
+    }]
+}
+```
+
+```html
+<interact-element data-interact-key="gallery">
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <img src="image1.jpg" />
+      <div class="overlay">View Details</div>
+    </div>
+    <div class="gallery-item">
+      <img src="image2.jpg" />
+      <div class="overlay">View Details</div>
+    </div>
+    <!-- More items... -->
+  </div>
+</interact-element>
+```

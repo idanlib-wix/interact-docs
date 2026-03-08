@@ -1,0 +1,176 @@
+---
+title: "Introduction"
+description: "About interactions"
+---
+
+An [interaction](ADDLINK) is a web animation triggered by some user interaction on the screen. Each interaction defines a complete cause-and-effect relationship: when the trigger occurs, the animation runs on the selected web element.
+
+You can define interactions to run when one or more triggers occurs, define reusable [effects](ADDLINK), and specify [conditions](ADDLINK) to determine when an interaction runs.
+
+## Basic Configuration Structure
+
+To define interactions, set up the [`config` object](ADDLINK) and specify it to the Interact class's [`create()`](ADDLINK):
+
+// TODO CODE GROUPS for various flavors/ entry points?
+
+```ts
+import type { InteractConfig } from "@wix/interact";
+
+const config: InteractConfig = {
+  effects: {
+    // Reusable effect definitions
+  },
+  conditions: {
+    // Reusable condition definitions
+  },
+  interactions: [
+    // Array of interaction definitions
+  ],
+};
+```
+
+## Advanced Configuration Patterns
+
+TBD
+
+## Performance Considerations
+
+### Lazy Loading Configurations
+
+Load configurations on demand:
+
+```typescript
+const loadFeatureConfig = async (
+  featureName: string,
+): Promise<InteractConfig> => {
+  const module = await import(`./features/${featureName}/interactions.js`);
+  return module.default;
+};
+
+// Usage
+const heroConfig = await loadFeatureConfig("hero");
+Interact.create(heroConfig);
+```
+
+## Real-World Example: E-commerce Product Page
+
+```typescript
+const productPageConfig: InteractConfig = {
+  effects: {
+    "product-image-zoom": {
+      keyframeEffect: {
+        name: "product-image-zoom",
+        keyframes: [{ transform: "scale(1)" }, { transform: "scale(1.1)" }],
+      },
+      duration: 300,
+      easing: "ease-out",
+    },
+    "add-to-cart-success": {
+      keyframeEffect: {
+        name: "add-to-cart-success",
+        keyframes: [
+          { backgroundColor: "#ef4444", transform: "scale(1)" },
+          { transform: "scale(1.05)" },
+          { backgroundColor: "#10b981", transform: "scale(1)" },
+        ],
+      },
+      duration: 600,
+      easing: "ease-in-out",
+    },
+    "review-entrance": {
+      keyframeEffect: {
+        name: "review-entrance",
+        keyframes: [
+          { opacity: "0", transform: "translateY(20px)" },
+          { opacity: "1", transform: "translateY(0)" },
+        ],
+      },
+      duration: 500,
+      easing: "ease-out",
+    },
+  },
+
+  conditions: {
+    desktop: {
+      type: "media",
+      predicate: "(min-width: 1024px)",
+    },
+    "touch-device": {
+      type: "media",
+      predicate: "(hover: none)",
+    },
+  },
+
+  interactions: [
+    // Product image hover (desktop only)
+    {
+      key: "product-image",
+      trigger: "hover",
+      conditions: ["desktop"],
+      effects: [
+        {
+          key: "product-image",
+          selector: "img",
+          effectId: "product-image-zoom",
+        },
+      ],
+    },
+
+    // Add to cart success animation
+    {
+      key: "add-to-cart-btn",
+      trigger: "click",
+      effects: [
+        {
+          key: "add-to-cart-btn",
+          effectId: "add-to-cart-success",
+        },
+      ],
+    },
+
+    // Staggered review animations
+    {
+      key: "review-1",
+      trigger: "viewEnter",
+      params: { type: "once", threshold: 0.2 },
+      effects: [
+        {
+          key: "review-1",
+          effectId: "review-entrance",
+          delay: 0,
+        },
+      ],
+    },
+    {
+      key: "review-2",
+      trigger: "viewEnter",
+      params: { type: "once", threshold: 0.2 },
+      effects: [
+        {
+          key: "review-2",
+          effectId: "review-entrance",
+          delay: 100,
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Best Practices
+
+### Configuration Organization
+
+1. **Start simple** - Use inline effects for prototypes
+2. **Extract reusable effects** as your project grows
+3. **Group by feature** rather than by type
+
+### Accessibility
+
+1. **Use `activate` instead of `click`** for keyboard accessibility (Enter/Space)
+2. **Use `interest` instead of `hover`** for keyboard accessibility (Focus)
+3. **Or enable `allowA11yTriggers` globally** to make existing triggers accessible
+
+### Performance Tips
+
+1. **Reuse effects** instead of duplicating them 2. **Use conditions** to avoid unnecessary animations 3. **Lazy load** configurations for large applications 4. **Validate in development** to catch errors early

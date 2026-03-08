@@ -1,0 +1,92 @@
+---
+title: "Introduction"
+description: "Getting started with Wix Interact"
+---
+
+## What's Wix Interact?
+
+Wix Interact is a library for interactive animations and effects triggered by user actions like clicking, hovering, or scrolling. It integrates with Wix Motion for smooth, performant animations.
+
+## Core concepts
+
+Before you start, understand the three main concepts:
+
+1. **Triggers**: User actions that start an interaction (click, hover, scroll)
+2. **Effects**: The visual changes that happen (animations, transitions, style changes). You can use premade effects made by Wix, called named effects (LINK), or create your own custom effects.
+3. **Elements**: The HTML elements that participate in the interaction
+
+## Understanding the configuration
+
+Let's break down what each part does.
+
+### The `interactions` array
+
+This contains all your interactions. Each interaction defines:
+
+- `key`: Which element triggers the interaction
+- `trigger`: What user action starts it
+- `effects`: What animations happen
+
+Learn more about [configuring an interaction](ADDLINK).
+
+### The `effects` object
+
+TODO add aanother exaple (or add to existing) a named effect.
+
+TODO named effects are a separate library, they need a separate section in the docs.
+
+Define reusable effects that you can reference by their `effectId`:
+
+```typescript
+const config = {
+  effects: {
+    "fade-in": {
+      // Define a reusable effect
+      duration: 1000,
+      keyframeEffect: {
+        name: "fade-in",
+        keyframes: [{ opacity: 0 }, { opacity: 1 }],
+      },
+    },
+  },
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter",
+      effects: [{ effectId: "fade-in" }], // Reference the effect
+    },
+  ],
+};
+```
+
+Learn more about [effects](ADDLINK).
+
+## TypeScript support
+
+Both entry points provide full TypeScript support:
+
+```typescript
+import { Interact, InteractConfig, Interaction } from "@wix/interact/react";
+
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter", // TypeScript validates trigger types
+      effects: [
+        {
+          duration: 1000,
+          keyframeEffect: {
+            name: "fade",
+            keyframes: [{ opacity: 0 }, { opacity: 1 }],
+          },
+        },
+      ],
+    },
+  ],
+  effects: {},
+};
+
+// Full type inference
+const instance = Interact.create(config);
+```

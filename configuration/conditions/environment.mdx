@@ -1,0 +1,131 @@
+---
+title: "Environment conditions"
+description: "Specify conditions based on environment"
+---
+
+## Environment-Based Conditions
+
+### Dark Mode Support
+
+```typescript
+const themeConfig: InteractConfig = {
+  conditions: {
+    "dark-mode": {
+      type: "media",
+      predicate: "(prefers-color-scheme: dark)",
+    },
+    "light-mode": {
+      type: "media",
+      predicate: "(prefers-color-scheme: light)",
+    },
+  },
+
+  interactions: [
+    // Dark mode: Subtle glow effects
+    {
+      key: "interactive-element",
+      trigger: "hover",
+      conditions: ["dark-mode"],
+      effects: [
+        {
+          key: "interactive-element",
+          keyframeEffect: {
+            name: "glow",
+            keyframes: [
+              { boxShadow: "none", borderColor: "transparent" },
+              {
+                boxShadow: "0 0 20px rgba(255,255,255,0.1)",
+                borderColor: "rgba(255,255,255,0.2)",
+              },
+            ],
+          },
+          duration: 300,
+        },
+      ],
+    },
+
+    // Light mode: Shadow effects
+    {
+      key: "interactive-element",
+      trigger: "hover",
+      conditions: ["light-mode"],
+      effects: [
+        {
+          key: "interactive-element",
+          keyframeEffect: {
+            name: "shadow",
+            keyframes: [
+              {
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                transform: "translateY(0)",
+              },
+              {
+                boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+                transform: "translateY(-2px)",
+              },
+            ],
+          },
+          duration: 300,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Performance-Based Conditions
+
+```typescript
+const performanceConfig: InteractConfig = {
+  conditions: {
+    "high-performance": {
+      type: "media",
+      predicate:
+        "(prefers-reduced-motion: no-preference) and (min-resolution: 96dpi)",
+    },
+    "low-performance": {
+      type: "media",
+      predicate: "(prefers-reduced-motion: reduce) or (max-resolution: 95dpi)",
+    },
+  },
+
+  interactions: [
+    // High performance: Rich animations
+    {
+      key: "feature-card",
+      trigger: "viewEnter",
+      conditions: ["high-performance"],
+      effects: [
+        {
+          key: "feature-icon",
+          keyframeEffect: {
+            name: "twist",
+            keyframes: [
+              { transform: "scale(0.5) rotate(-180deg)", filter: "blur(10px)" },
+              { transform: "scale(1) rotate(0deg)", filter: "blur(0)" },
+            ],
+          },
+          duration: 800,
+          easing: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        },
+      ],
+    },
+
+    // Low performance: Simple fade
+    {
+      key: "feature-card",
+      trigger: "viewEnter",
+      conditions: ["low-performance"],
+      effects: [
+        {
+          key: "feature-card",
+          namedEffect: {
+            type: "FadeIn",
+          },
+          duration: 400,
+        },
+      ],
+    },
+  ],
+};
+```
