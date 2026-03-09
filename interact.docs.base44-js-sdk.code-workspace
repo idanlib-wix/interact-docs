@@ -1,0 +1,17 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+    {
+      "path": "../interact-project-2",
+    },
+    {
+      "path": "../interact",
+    },
+    {
+      "path": "../../wix-repos/javascript-sdk",
+    },
+  ],
+  "settings": {},
+}

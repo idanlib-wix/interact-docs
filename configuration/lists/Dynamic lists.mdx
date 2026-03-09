@@ -1,0 +1,99 @@
+---
+title: "Dynamic lists"
+description: "Handle dynamic list content"
+---
+
+## Dynamic List Management
+
+### Automatic Mutation Tracking
+
+`@wix/interact` automatically watches for changes in list containers:
+
+```typescript
+// Configuration
+const config = {
+  interactions: [
+    {
+      key: "todo-list",
+      listContainer: ".todos",
+      trigger: "viewEnter",
+      effects: [
+        {
+          key: "todo-list",
+          listContainer: ".todos",
+          keyframeEffect: {
+            name: "slide-in",
+            keyframes: [
+              { opacity: "0", transform: "translateX(-20px)" },
+              { opacity: "1", transform: "translateX(0)" },
+            ],
+          },
+          duration: 300,
+        },
+      ],
+    },
+  ],
+};
+
+Interact.create(config);
+```
+
+```javascript
+// Add new item - animation applies automatically
+function addTodoItem(text) {
+  const todoList = document.querySelector(".todos");
+  const newItem = document.createElement("div");
+  newItem.className = "todo-item";
+  newItem.textContent = text;
+
+  todoList.appendChild(newItem); // Automatically triggers animation
+}
+
+// Remove item - cleanup happens automatically
+function removeTodoItem(item) {
+  item.remove(); // Automatically cleaned up
+}
+```
+
+### Manual List Item Management
+
+For advanced use cases, use the list management API:
+
+```typescript
+import { addListItems, removeListItems } from "@wix/interact";
+
+// Add specific items
+function addItems(containerElement, items) {
+  const root = document.querySelector(
+    'interact-element[data-interact-key="my-list"]',
+  );
+  addListItems(root, "my-list", ".list-container", items);
+}
+
+// Remove specific items
+function removeItems(items) {
+  removeListItems(items);
+}
+```
+
+### watchChildList Method
+
+The custom element's `watchChildList` method sets up mutation observers:
+
+```typescript
+const element = document.querySelector("interact-element");
+
+// Start watching for changes in a container
+element.watchChildList(".dynamic-list");
+
+// Now any DOM changes in .dynamic-list will be tracked
+```
+
+**How it works:**
+
+1. Creates a `MutationObserver` for the container
+2. Tracks `childList` mutations (additions/removals)
+3. Automatically calls `addListItems` for new elements
+4. Automatically calls `removeListItems` for removed elements
+5. Applies interactions to new items
+6. Cleans up removed items

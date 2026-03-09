@@ -1,0 +1,68 @@
+---
+title: "InteractionHandlerModule"
+---
+
+> **InteractionHandlerModule**\<`T`\> = `object`
+
+
+## Properties
+
+<ParamField body="add" type="(source, target, effect, options, interactOptions) => void" required>
+
+#### Parameters
+
+##### source
+
+`HTMLElement`
+
+##### target
+
+`HTMLElement`
+
+##### effect
+
+[`Effect`](Effect)
+
+##### options
+
+[`InteractionParamsTypes`](InteractionParamsTypes)\[`T`\]
+
+##### interactOptions
+
+[`InteractOptions`](InteractOptions)
+
+#### Returns
+
+`void`
+
+</ParamField>
+
+
+<ParamField body="registerOptionsGetter()" type="(getter) => void">
+
+#### Parameters
+
+##### getter
+
+() => `any`
+
+#### Returns
+
+`void`
+
+</ParamField>
+
+
+<ParamField body="remove" type="(element) => void" required>
+
+#### Parameters
+
+##### element
+
+`HTMLElement`
+
+#### Returns
+
+`void`
+
+</ParamField>

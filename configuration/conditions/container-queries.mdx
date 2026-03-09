@@ -1,0 +1,140 @@
+---
+title: "Container queries"
+description: "Specify conditions based on container size"
+---
+
+## Container Query Patterns
+
+### Responsive Cards
+
+```typescript
+const containerConfig: InteractConfig = {
+  conditions: {
+    "card-large": {
+      type: "container",
+      predicate: "(min-width: 350px)",
+    },
+    "card-small": {
+      type: "container",
+      predicate: "(max-width: 349px)",
+    },
+    "card-tall": {
+      type: "container",
+      predicate: "(min-height: 400px)",
+    },
+  },
+
+  interactions: [
+    // Large cards: Complex hover effect
+    {
+      key: "adaptive-card",
+      trigger: "hover",
+      conditions: ["card-large"],
+      effects: [
+        {
+          key: "card-image",
+          keyframeEffect: {
+            name: "large-image-kf",
+            keyframes: [
+              { transform: "scale(1)", filter: "brightness(1)" },
+              { transform: "scale(1.1)", filter: "brightness(1.1)" },
+            ],
+          },
+          duration: 300,
+        },
+        {
+          key: "card-overlay",
+          keyframeEffect: {
+            name: "large-overlay-kf",
+            keyframes: [
+              { opacity: "0", transform: "translateY(100%)" },
+              { opacity: "1", transform: "translateY(0)" },
+            ],
+          },
+          duration: 250,
+          delay: 50,
+        },
+      ],
+    },
+
+    // Small cards: Simple effect
+    {
+      key: "adaptive-card",
+      trigger: "hover",
+      conditions: ["card-small"],
+      effects: [
+        {
+          key: "adaptive-card",
+          keyframeEffect: {
+            name: "small-kf",
+            keyframes: [
+              { boxShadow: "0 2px 4px rgba(0,0,0,0.1)" },
+              { boxShadow: "0 8px 16px rgba(0,0,0,0.15)" },
+            ],
+          },
+          duration: 200,
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Layout-Aware Animations
+
+```typescript
+const layoutConfig: InteractConfig = {
+  conditions: {
+    "sidebar-layout": {
+      type: "container",
+      predicate: "(min-width: 1200px)",
+    },
+    "stack-layout": {
+      type: "container",
+      predicate: "(max-width: 1199px)",
+    },
+  },
+
+  interactions: [
+    // Sidebar layout: Slide from side
+    {
+      key: "content-panel",
+      trigger: "viewEnter",
+      conditions: ["sidebar-layout"],
+      effects: [
+        {
+          key: "content-panel",
+          keyframeEffect: {
+            name: "slide-from-left",
+            keyframes: [
+              { transform: "translateX(-50px)", opacity: "0" },
+              { transform: "translateX(0)", opacity: "1" },
+            ],
+          },
+          duration: 600,
+        },
+      ],
+    },
+
+    // Stack layout: Slide from bottom
+    {
+      key: "content-panel",
+      trigger: "viewEnter",
+      conditions: ["stack-layout"],
+      effects: [
+        {
+          key: "content-panel",
+          keyframeEffect: {
+            name: "slide-from-bottom",
+            keyframes: [
+              { transform: "translateY(30px)", opacity: "0" },
+              { transform: "translateY(0)", opacity: "1" },
+            ],
+          },
+          duration: 600,
+        },
+      ],
+    },
+  ],
+};
+```

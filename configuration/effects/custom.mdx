@@ -1,0 +1,44 @@
+---
+title: "Custom effects"
+description: "Create custom effects with JavaScript functions"
+---
+
+## Custom effects
+
+For complete control, use custom effects with JavaScript functions:
+
+```typescript
+{
+    key: 'custom-element',
+    customEffect: (element, progress) => {
+        // progress is 0-1 for scrub effects, or animation timing for time effects
+        const scale = 1 + (progress * 0.2);
+        const rotation = progress * 360;
+
+        element.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+        element.style.filter = `hue-rotate(${progress * 180}deg)`;
+    }
+}
+```
+
+### Advanced custom effect
+
+```typescript
+{
+    key: 'particle-system',
+    customEffect: (element, progress, params) => {
+        const particles = element.querySelectorAll('.particle');
+
+        particles.forEach((particle, index) => {
+            const delay = index * 0.1;
+            const adjustedProgress = Math.max(0, progress - delay);
+
+            particle.style.opacity = adjustedProgress;
+            particle.style.transform = `
+                translateY(${(1 - adjustedProgress) * 50}px)
+                rotate(${adjustedProgress * 180}deg)
+            `;
+        });
+    }
+}
+```

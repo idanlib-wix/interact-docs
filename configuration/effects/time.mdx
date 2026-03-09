@@ -1,0 +1,70 @@
+---
+title: "Time effects"
+description: "Create time-based animations"
+---
+
+## Time effects
+
+Time effects are traditional time-based animations perfect for entrance effects, hover interactions, and click responses.
+
+<Tabs>
+  <Tab title="Named effects">
+    Named effects are pre-built animations from `@wix/motion-presets` or effects registered via `Interact.registerEffects()`:
+
+    ```typescript
+    {
+        key: 'my-element',
+        namedEffect: { type: 'FadeIn' },     // Predefined animation
+        duration: 800,             // Animation duration in ms
+        easing: 'ease-out',        // Animation timing curve
+        delay: 200,                // Delay before starting
+        iterations: 1,             // How many times to repeat
+        fill: 'forwards'           // Animation fill mode
+    }
+    ```
+
+  </Tab>
+  <Tab title="Keyframe effects">
+    For custom animations, use keyframe effects:
+
+    ```typescript
+    {
+        key: 'custom-animation',
+        keyframeEffect: {
+            name: 'custom-animation',
+            keyframes: [
+                { transform: 'scale(1) rotate(0deg)', opacity: '1', backgroundColor: '#ff0000' },
+                { transform: 'scale(1.2) rotate(180deg)', opacity: '0.8', backgroundColor: '#0000ff' }
+            ]
+        },
+        duration: 600,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+    }
+    ```
+
+  </Tab>
+</Tabs>
+
+### Real-world example: card entrance
+
+```typescript
+{
+    key: 'product-card',
+    trigger: 'viewEnter',
+    params: { type: 'once', threshold: 0.3 },
+    effects: [
+        {
+            keyframeEffect: {
+                name: 'card-entrance',
+                keyframes: [
+                    { opacity: '0', transform: 'translateY(60px) scale(0.9)' },
+                    { opacity: '1', transform: 'translateY(0) scale(1)' }
+                ]
+            },
+            duration: 800,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',  // Custom easing
+            fill: 'forwards'
+        }
+    ]
+}
+```

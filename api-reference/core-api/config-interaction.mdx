@@ -1,0 +1,77 @@
+---
+title: "interaction"
+description: "The interaction object"
+---
+
+The `interaction` object defines when an interaction runs and how interaction behaves in the UI. You can define multiple interactions and specify them to the [`interactions` array in the `config` object](ADDLINK).
+
+<ResponseField name="interaction" type="object">
+  <Expandable title="properties" defaultOpen>
+    <ResponseField name="key" type="string" required>
+      TODO 
+    </ResponseField>
+
+    <ResponseField name="selector" type="string">
+        TODO
+    </ResponseField>
+
+    <ResponseField name="trigger" type="string">
+        TODO. What are the possible values here?
+    </ResponseField>
+
+    <ResponseField name="params" type="object">
+        Additional configuration for the specified `trigger`.
+        > Specify fields listed under the tab that matches the current `trigger`.
+          <Expandable title="Trigger-specific params">
+        <Tabs sync={true}>
+          <Tab title="hover">
+            Params for when `trigger` is `hover`
+          <ResponseField name="type" type="`alternate` | `repeat` | `once` | `state`">
+            Behavior type for the `hover` trigger. Possible values:
+              - `alternate`: TODO
+              - `repeat`: TODO
+              - `once`: TODO
+              - `state`: TODO
+          </ResponseField>
+          </Tab>
+          <Tab title="pointerMove">
+            Params for when `trigger` is `pointerMove`
+          <ResponseField name="hitArea" type="`self` | `root`">
+            Behavior type for the `hitArea` trigger. Possible values:
+              - `self`: TODO
+              - `root`: TODO
+          </ResponseField>
+          </Tab>
+        </Tabs>
+        </Expandable>
+    </ResponseField>
+
+    <ResponseField name="conditions" type="string[]">
+        TODO. Do conditions have a type (e.g. Condition)?
+        <Expandable title="properties">
+          <ResponseField name="type" type="string">
+          TODO. WHAT ARE POSSIBLE NESTED VALUES?
+          </ResponseField>
+        </Expandable>
+    </ResponseField>
+
+    <ResponseField name="effects" type="object[]">
+        TODO. Do effects have a type?
+        <Expandable title="properties">
+                  <ResponseField name="key" type="string">
+          TODO.
+          </ResponseField>
+                    <ResponseField name="selector" type="string">
+          TODO.
+          </ResponseField>
+                    <ResponseField name="duration" type="number">
+          TODO.
+          </ResponseField>
+                    <ResponseField name="namedEffect" type="string">
+          TODO.
+          </ResponseField>
+        </Expandable>
+    </ResponseField>
+
+  </Expandable>
+</ResponseField>

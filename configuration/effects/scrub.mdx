@@ -1,0 +1,87 @@
+---
+title: "Scrub effects"
+description: "Create scrub animations"
+---
+
+## Scrub effects
+
+Scrub effects are progress-based animations that respond to scroll position or pointer position.
+
+### Basic scrub effect
+
+```typescript
+{
+    key: 'parallax-bg',
+    keyframeEffect: {
+        name: 'parallax',
+        keyframes: [
+            { transform: 'translateY(0)' },
+            { transform: 'translateY(-200px)' }
+        ]
+    },
+    // No duration - controlled by scroll/pointer progress
+    easing: 'linear',
+    rangeStart: { name: 'cover', offset: { type: 'percentage', value: 0 } },
+    rangeEnd: { name: 'cover', offset: { type: 'percentage', value: 100 } }
+}
+```
+
+### Range configuration
+
+Control when the animation starts and stops:
+
+```typescript
+{
+    key: 'fade-element',
+    keyframeEffect: {
+        name: 'fade',
+        keyframes: [
+            { opacity: '1' },
+            { opacity: '0' }
+        ]
+    },
+    rangeStart: { name: 'cover', offset: { type: 'percentage', value: 30 } },  // Start at 30% scroll
+    rangeEnd: { name: 'cover', offset: { type: 'percentage', value: 80 } }     // End at 80% scroll
+}
+```
+
+### Advanced pointer properties
+
+TBD
+
+### Real-world example: parallax hero
+
+```typescript
+{
+    key: 'hero-section',
+    trigger: 'viewProgress',
+    effects: [
+        // Background image moves slower
+        {
+            key: 'hero-bg',
+            keyframeEffect: {
+                name: 'image-parallax',
+                keyframes: [
+                    { transform: 'translateY(0)' },
+                    { transform: 'translateY(-150px)' }
+                ]
+            },
+            rangeStart: { name: 'cover', offset: { type: 'percentage', value: 0 } },
+            rangeEnd: { name: 'cover', offset: { type: 'percentage', value: 100 } }
+        },
+        // Text fades out faster
+        {
+            key: 'hero-text',
+            keyframeEffect: {
+                name: 'text-fade',
+                keyframes: [
+                    { opacity: '1', transform: 'translateY(0)' },
+                    { opacity: '0', transform: 'translateY(-50px)' }
+                ]
+            },
+            rangeStart: { name: 'cover', offset: { type: 'percentage', value: 20 } },
+            rangeEnd: { name: 'cover', offset: { type: 'percentage', value: 60 } }
+        }
+    ]
+}
+```

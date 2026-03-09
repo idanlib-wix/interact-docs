@@ -1,0 +1,168 @@
+---
+title: "List animation patterns"
+description: "Common list animation patterns"
+---
+
+## List Animation Patterns
+
+### Entrance Animations
+
+#### Fade In Sequence
+
+```typescript
+{
+    key: 'cards',
+    listContainer: '.card-grid',
+    trigger: 'viewEnter',
+    params: { type: 'once', threshold: 0.1 },
+    effects: [{
+        key: 'cards',
+        listContainer: '.card-grid',
+        keyframeEffect: {
+            name: 'fade-in',
+            keyframes: [
+                { opacity: '0' },
+                { opacity: '1' }
+            ]
+        },
+        duration: 600,
+        easing: 'ease-out'
+    }]
+}
+```
+
+#### Slide Up Cascade
+
+```typescript
+{
+    key: 'features',
+    listContainer: '.feature-list',
+    trigger: 'viewEnter',
+    params: { type: 'once', threshold: 0.2 },
+    effects: [{
+        key: 'features',
+        listContainer: '.feature-list',
+        keyframeEffect: {
+            name: 'slide-up',
+            keyframes: [
+                { opacity: '0', transform: 'translateY(40px)' },
+                { opacity: '1', transform: 'translateY(0)' }
+            ]
+        },
+        duration: 700,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
+    }]
+}
+```
+
+#### Scale and Rotate
+
+```typescript
+{
+    key: 'photos',
+    listContainer: '.photo-grid',
+    trigger: 'viewEnter',
+    params: { type: 'once', threshold: 0.15 },
+    effects: [{
+        key: 'photos',
+        listContainer: '.photo-grid',
+        keyframeEffect: {
+            name: 'scale-rotate',
+            keyframes: [
+                { opacity: '0', transform: 'scale(0.5) rotate(-10deg)' },
+                { opacity: '1', transform: 'scale(1) rotate(0deg)' }
+            ]
+        },
+        duration: 800,
+        easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' // Elastic
+    }]
+}
+```
+
+### Hover Effects on Lists
+
+```typescript
+{
+    key: 'product-grid',
+    listContainer: '.products',
+    trigger: 'hover',
+    effects: [
+        // Lift the product card
+        {
+            key: 'product-grid',
+            listContainer: '.products',
+            keyframeEffect: {
+                name: 'lift',
+                keyframes: [
+                    { transform: 'translateY(0)', boxShadow: '0 2px 8px rgb(0 0 0 / 0.1)' },
+                    { transform: 'translateY(-8px)', boxShadow: '0 12px 24px rgb(0 0 0 / 0.15)' }
+                ]
+            },
+            duration: 250
+        },
+        // Zoom the image
+        {
+            key: 'product-grid',
+            listContainer: '.products',
+            selector: '.product-image img',
+            keyframeEffect: {
+                name: 'zoom',
+                keyframes: [
+                    { transform: 'scale(1)' },
+                    { transform: 'scale(1.1)' }
+                ]
+            },
+            duration: 300
+        }
+    ]
+}
+```
+
+### Infinite Scroll Integration
+
+```typescript
+{
+    key: 'infinite-list',
+    listContainer: '.items',
+    trigger: 'viewEnter',
+    params: { type: 'repeat', threshold: 0.1 },
+    effects: [{
+        key: 'infinite-list',
+        listContainer: '.items',
+        keyframeEffect: {
+            name: 'fade-slide',
+            keyframes: [
+                { opacity: '0', transform: 'translateY(30px)' },
+                { opacity: '1', transform: 'translateY(0)' }
+            ]
+        },
+        duration: 500
+    }]
+}
+```
+
+```javascript
+// Infinite scroll implementation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      loadMoreItems(); // New items automatically get animations
+    }
+  });
+});
+
+observer.observe(document.querySelector(".loading-sentinel"));
+
+function loadMoreItems() {
+  const container = document.querySelector(".items");
+
+  // Fetch and add new items
+  fetchItems().then((items) => {
+    items.forEach((item) => {
+      const element = createItemElement(item);
+      container.appendChild(element);
+      // Animation triggers automatically via mutation observer
+    });
+  });
+}
+```

@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Wix Interact",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -16,33 +16,79 @@
           {
             "group": "Getting started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "getting-started/introduction",
+              "getting-started/quickstart",
+              "getting-started/common-patterns"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Configuration",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              {
+                "group": "Configuration",
+                "pages": [
+                  "configuration/configuration/intro",
+                  "configuration/configuration/selecting-elements",
+                  "configuration/configuration/organizing"
+                ]
+              },
+              {
+                "group": "Triggers",
+                "pages": [
+                  "configuration/triggers/intro",
+                  "configuration/triggers/hover",
+                  "configuration/triggers/click",
+                  "configuration/triggers/interest",
+                  "configuration/triggers/activate",
+                  "configuration/triggers/viewEnter",
+                  "configuration/triggers/animationEnd",
+                  "configuration/triggers/viewProgress",
+                  "configuration/triggers/pointerMove"
+                ]
+              },
+              {
+                "group": "Effects and Animations",
+                "expanded": false,
+                "pages": [
+                  "configuration/effects/intro",
+                  "configuration/effects/time",
+                  "configuration/effects/scrub",
+                  "configuration/effects/transition",
+                  "configuration/effects/custom"
+                ]
+              },
+              {
+                "group": "Conditions and Media Queries",
+                "expanded": false,
+                "pages": [
+                  "configuration/conditions/intro",
+                  "configuration/conditions/responsive-patterns",
+                  "configuration/conditions/devices",
+                  "configuration/conditions/container-queries",
+                  "configuration/conditions/environment"
+                ]
+              },
+              {
+                "group": "Lists and Dynamic Content",
+                "expanded": false,
+                "pages": [
+                  "configuration/lists/intro",
+                  "configuration/lists/Basic list animations",
+                  "configuration/lists/Staggard animations",
+                  "configuration/lists/Dynamic lists",
+                  "configuration/lists/List animation patterns"
+                ]
+              }
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Integrations",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              {
+                "group": "React",
+                "expanded": false,
+                "pages": ["getting-started/integrations/integrations-react"]
+              }
             ]
           }
         ]
@@ -51,37 +97,167 @@
         "tab": "API reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Core API",
             "pages": [
-              "api-reference/introduction"
+              "api-reference/overview",
+              "api-reference/core-api/config",
+              "api-reference/core-api/config-interaction",
+              "api-reference/core-api/config-effect",
+              "api-reference/core-api/config-condition"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Classes",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              {
+                "group": "Interact",
+                "expanded": false,
+                "pages": [
+                  "api-reference/classes/create",
+                  "api-reference/classes/registerEffects",
+                  "api-reference/classes/destroy"
+                ]
+              },
+              "api-reference/classes/InteractionController"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              {
+                "group": "React",
+                "expanded": false,
+                "pages": [
+                  "api-reference/integrations/react/Interaction",
+                  "api-reference/integrations/react/createInteractRef"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "Standalone",
+            "pages": [
+              {
+                "group": "Functions",
+                "expanded": false,
+                "pages": [
+                  "api-reference/standalone-elements/functions/add",
+                  "api-reference/standalone-elements/functions/remove",
+                  "api-reference/standalone-elements/functions/generate"
+                ]
+              },
+              "api-reference/standalone-elements/interact-element"
+            ]
+          },
+          {
+            "group": "Generated Reference",
+            "pages": [
+              {
+                "group": "Classes and Interfaces",
+                "pages": [
+                  {
+                    "group": "Interact",
+                    "expanded": false,
+                    "pages": [
+                      "api-reference/generated/classes/Interact/constructor",
+                      {
+                        "group": "Properties",
+                        "pages": [
+                          "api-reference/generated/classes/Interact/addedInteractions",
+                          "api-reference/generated/classes/Interact/controllers",
+                          "api-reference/generated/classes/Interact/dataCache",
+                          "api-reference/generated/classes/Interact/listInteractionsCache",
+                          "api-reference/generated/classes/Interact/mediaQueryListeners",
+                          "api-reference/generated/classes/Interact/allowA11yTriggers",
+                          "api-reference/generated/classes/Interact/controllerCache",
+                          "api-reference/generated/classes/Interact/defineInteractElement",
+                          "api-reference/generated/classes/Interact/forceReducedMotion",
+                          "api-reference/generated/classes/Interact/instances",
+                          "api-reference/generated/classes/Interact/registerEffects"
+                        ]
+                      },
+                      {
+                        "group": "Methods",
+                        "pages": [
+                          "api-reference/generated/classes/Interact/clearInteractionStateForKey",
+                          "api-reference/generated/classes/Interact/clearMediaQueryListenersForKey",
+                          "api-reference/generated/classes/Interact/deleteController",
+                          "api-reference/generated/classes/Interact/destroy",
+                          "api-reference/generated/classes/Interact/get",
+                          "api-reference/generated/classes/Interact/has",
+                          "api-reference/generated/classes/Interact/init",
+                          "api-reference/generated/classes/Interact/setController",
+                          "api-reference/generated/classes/Interact/setupMediaQueryListener",
+                          "api-reference/generated/classes/Interact/create",
+                          "api-reference/generated/classes/Interact/static_deleteController",
+                          "api-reference/generated/classes/Interact/static_destroy",
+                          "api-reference/generated/classes/Interact/getController",
+                          "api-reference/generated/classes/Interact/getInstance",
+                          "api-reference/generated/classes/Interact/static_setController",
+                          "api-reference/generated/classes/Interact/setup"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "IInteractionController",
+                    "expanded": false,
+                    "pages": [
+                      {
+                        "group": "Properties",
+                        "pages": [
+                          "api-reference/generated/interfaces/IInteractionController/__observers",
+                          "api-reference/generated/interfaces/IInteractionController/connected",
+                          "api-reference/generated/interfaces/IInteractionController/element",
+                          "api-reference/generated/interfaces/IInteractionController/key",
+                          "api-reference/generated/interfaces/IInteractionController/sheet",
+                          "api-reference/generated/interfaces/IInteractionController/useFirstChild"
+                        ]
+                      },
+                      {
+                        "group": "Methods",
+                        "pages": [
+                          "api-reference/generated/interfaces/IInteractionController/_childListChangeHandler",
+                          "api-reference/generated/interfaces/IInteractionController/connect",
+                          "api-reference/generated/interfaces/IInteractionController/disconnect",
+                          "api-reference/generated/interfaces/IInteractionController/getActiveEffects",
+                          "api-reference/generated/interfaces/IInteractionController/renderStyle",
+                          "api-reference/generated/interfaces/IInteractionController/toggleEffect",
+                          "api-reference/generated/interfaces/IInteractionController/update",
+                          "api-reference/generated/interfaces/IInteractionController/watchChildList"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Functions",
+                "pages": [
+                  "api-reference/generated/functions/add",
+                  "api-reference/generated/functions/generate",
+                  "api-reference/generated/functions/remove"
+                ]
+              },
+              {
+                "group": "Types: Internal only",
+                "pages": [
+                  "api-reference/generated/type-aliases/InteractOptions",
+                  "api-reference/generated/type-aliases/InteractionParamsTypes",
+                  "api-reference/generated/type-aliases/AnimationOptions",
+                  "api-reference/generated/type-aliases/CreateTransitionCSSParams",
+                  "api-reference/generated/type-aliases/TriggerHandlerMap",
+                  "api-reference/generated/type-aliases/ViewEnterHandlerModule",
+                  "api-reference/generated/type-aliases/HandlerObject",
+                  "api-reference/generated/type-aliases/HandlerObjectMap",
+                  "api-reference/generated/type-aliases/InteractionHandlerModule"
+                ]
+              }
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/light.svg",
@@ -90,8 +266,8 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Demo site",
+        "href": "https://interact.wix.com"
       }
     ],
     "primary": {
@@ -102,21 +278,14 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   }
 }
