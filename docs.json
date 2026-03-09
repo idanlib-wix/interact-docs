@@ -240,16 +240,12 @@
                 ]
               },
               {
-                "group": "Types",
+                "group": "Types: Internal only",
                 "pages": [
-                  "api-reference/generated/type-aliases/InteractConfig",
                   "api-reference/generated/type-aliases/InteractOptions",
-                  "api-reference/generated/type-aliases/InteractionTrigger",
                   "api-reference/generated/type-aliases/InteractionParamsTypes",
                   "api-reference/generated/type-aliases/AnimationOptions",
-                  "api-reference/generated/type-aliases/TransitionProperty",
                   "api-reference/generated/type-aliases/CreateTransitionCSSParams",
-                  "api-reference/generated/type-aliases/StyleProperty",
                   "api-reference/generated/type-aliases/TriggerHandlerMap",
                   "api-reference/generated/type-aliases/ViewEnterHandlerModule",
                   "api-reference/generated/type-aliases/HandlerObject",

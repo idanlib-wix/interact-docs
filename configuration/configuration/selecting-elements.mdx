@@ -39,7 +39,11 @@ const config: InteractConfig = {
 };
 ```
 
-### Selector vs ListContainer
+VISUAL DEMONSTRATION
+
+### Selecting an element with children
+
+TODO EXPLAIN IN MORE DETAIL
 
 - **`selector`**: Selects all matching elements using CSS selector (querySelectorAll)
 - **`listContainer`**: Selects a container for targeting its child elements for list-based interactions
@@ -50,7 +54,7 @@ const config: InteractConfig = {
 {
   key: 'product-grid',
   listContainer: '.products', // Container holding all product items
-  selector: '.product-image', // querySelectorAll finds all images as list items
+  selector: '.product-image', // querySelectorAll finds all images in the container
   trigger: 'hover',
   effects: [
     {
@@ -66,7 +70,9 @@ const config: InteractConfig = {
 }
 ```
 
-## Advanced Selector Examples
+VISUAL DEMONSTRATION
+
+## OPTIONAL: Advanced Selector Examples
 
 ### Card Component with Multiple Interactive Areas
 
