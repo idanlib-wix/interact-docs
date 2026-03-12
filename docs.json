@@ -18,7 +18,7 @@
             "pages": [
               "getting-started/introduction",
               "getting-started/quickstart",
-              "getting-started/common-patterns"
+              "getting-started/named-effects"
             ]
           },
           {
@@ -29,7 +29,8 @@
                 "pages": [
                   "configuration/configuration/intro",
                   "configuration/configuration/selecting-elements",
-                  "configuration/configuration/organizing"
+                  "configuration/configuration/organizing",
+                  "configuration/configuration/common-patterns"
                 ]
               },
               {
