@@ -1,9 +1,9 @@
 ---
-title: "Quick Start"
-description: "Get started quickly"
+title: "Quickstart"
+description: "Set Up Your First Interaction"
 ---
 
-Welcome to Wix Interact. This guide will help you create your first interaction in under 4 minutes.
+Quickly set up your first animation with Interact. Here's how to create a hover animation that scales an image:
 
 ## Installation
 
@@ -13,7 +13,7 @@ npm install @wix/interact
 
 ## Supported frameworks
 
-The `@wix/interact` package provides three entry points based on your use case:
+The `@wix/interact` package provides 3 entry points based on your use case:
 
 <Tabs>
   <Tab title="React">
@@ -35,7 +35,7 @@ The `@wix/interact` package provides three entry points based on your use case:
 
   </Tab>
   <Tab title="JavaScript">
-    When using vanilla JavaScript:
+    When using vanilla JavaScript:å
 
     ```typescript
     import { Interact, add, remove } from "@wix/interact";
@@ -44,17 +44,15 @@ The `@wix/interact` package provides three entry points based on your use case:
   </Tab>
 </Tabs>
 
-## Your first interaction
-
-Let's create your first interaction:
+## Set up an Interaction
 
 <Tabs>
   <Tab title="React">
 
-The quickest way to create an interaction is by using the `Interaction` React component.
+Use the `Interaction` React component to wrap the element you want to animate.
 
     <Steps>
-      <Step title="Configure the Interaction">
+      <Step title="Configure the interaction">
 
     ```tsx
     import React, { useEffect } from "react";
@@ -63,16 +61,16 @@ The quickest way to create an interaction is by using the `Interaction` React co
     const config: InteractConfig = {
       interactions: [
         {
-          key: "my-image", // What element triggers the interaction
-          trigger: "hover", // What user action starts it
+          key: "my-image",
+          trigger: "hover",
           effects: [
             {
               keyframeEffect: {
                 name: "scale",
                 keyframes: [{ scale: 2 }],
               },
-              duration: 300, // Animation duration in milliseconds
-              easing: "ease-out", // Animation timing
+              duration: 300,
+              easing: "ease-out",
             },
           ],
         },
@@ -82,7 +80,7 @@ The quickest way to create an interaction is by using the `Interaction` React co
     ```
 
       </Step>
-      <Step title="Create the Interaction">
+      <Step title="Create the interaction and render the component">
 
     ```tsx
     function App() {
@@ -105,16 +103,7 @@ The quickest way to create an interaction is by using the `Interaction` React co
     export default App;
     ```
 
-      </Step>
-      <Step title="Add cleanup">
-        Always clean up interactions when components unmount:
-
-    ```tsx
-    useEffect(() => {
-      const instance = Interact.create(config);
-      return () => instance.destroy();
-    }, []);
-    ```
+    The `useEffect` cleanup method calls `instance.destroy()` to remove the interaction when the component unmounts.
 
       </Step>
     </Steps>
@@ -122,12 +111,12 @@ The quickest way to create an interaction is by using the `Interaction` React co
 </Tab>
   <Tab title="Web Components">
 
-For using web components , use the `interact-element` custom element.
+Use the `interact-element` custom element to wrap the element you want to animate.
 
 <Steps>
     <Step title="Create the HTML structure">
 
-    one two three four
+    Wrap your element in an `<interact-element>` tag and give it a unique `data-interact-key`:
 
     ```html
     <!DOCTYPE html>
@@ -136,7 +125,6 @@ For using web components , use the `interact-element` custom element.
         <title>My First Interaction</title>
     </head>
     <body>
-      <!-- Wrap your element in `<interact-element>` and give it a unique `data-interact-key` -->
         <interact-element
         data-interact-key="my-image">
         <img id="my-image" src="logo.png" alt="Logo" />
@@ -154,20 +142,19 @@ For using web components , use the `interact-element` custom element.
 // main.js
 import { Interact } from "@wix/interact/web";
 
-// Create the interaction configuration
 const config = {
   interactions: [
     {
-      key: "my-image", // The `data-interact-key` of the target element
-      trigger: "hover", // What user action starts it
+      key: "my-image",
+      trigger: "hover",
       effects: [
         {
           keyframeEffect: {
             name: "scale",
             keyframes: [{ scale: 2 }],
           },
-          duration: 300, // Animation duration in milliseconds
-          easing: "ease-out", // Animation timing
+          duration: 300,
+          easing: "ease-out",
         },
       ],
     },
@@ -175,16 +162,14 @@ const config = {
   effects: {},
 };
 
-// Initialize the interaction
 Interact.create(config);
 ```
 
   </Step>
   <Step title="Add cleanup">
-    Always clean up interactions when pages change or on navigation:
+    Clean up interactions when the page unloads or on SPA navigation:
 
 ```javascript
-// On page unload or SPA navigation
 window.addEventListener("beforeunload", () => {
   Interact.destroy();
 });
@@ -196,52 +181,19 @@ window.addEventListener("beforeunload", () => {
   </Tab>
 </Tabs>
 
-That's it! The image will now scale up when you hover over it.
+The image now scales up when you hover over it.
 
-## Using animation presets
+TODO ADD VISUAL DEMONSTRATION
 
-To use `namedEffect` presets (for example `FadeIn`, `SlideIn`, `BounceIn`), register effect modules from `@wix/motion-presets` or your own custom effects.
+<Tip>
+Instead of writing custom keyframes, you can also use named effects. These are pre-made animation presets created by Wix that you can import and use in your Interactions.
 
-```bash
-npm install @wix/motion-presets
-```
+Learn more about [named effects](ADDLINK).
 
-Then register the presets before creating interactions:
+</Tip>
 
-<Tabs>
-  <Tab title="React">REACT CODE</Tab>
-  <Tab title="Web Components">
-  ```typescript
-  import { Interact } from "@wix/interact/web";
-  import { FadeIn } from "@wix/motion-presets";
+## See also
 
-// Register animation presets
-Interact.registerEffects({ FadeIn });
-
-// Now you can use namedEffect in your config
-const config = {
-interactions: [
-{
-key: "hero",
-trigger: "viewEnter",
-effects: [
-{
-namedEffect: { type: "FadeIn" },
-duration: 1000,
-},
-],
-},
-],
-};
-
-Interact.create(config);
-
-```
-  </Tab>
-</Tabs>
-
-<Callout type="info">
-  If you only use custom keyframes `keyframeEffect`, you don't need
-  `@wix/motion-presets`.
-</Callout>
-```
+- [About Wix Interact](/getting-started/introduction)
+- [Named Effects](/getting-started/named-effects)
+- [Configuration](/configuration/configuration/intro)

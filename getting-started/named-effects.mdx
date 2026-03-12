@@ -1,0 +1,151 @@
+---
+title: "Named Effects"
+description: "Use premade animation presets in your interactions"
+---
+
+Named effects are animation presets made by Wix. Instead of writing your own animations, you can use named effects to add polished animations to your Interactions with minimal configuration.
+
+Named effects cover a range of animation types, each designed for a different trigger. Some of the named effects include:
+
+- **Entrance**: Single-shot reveals when an element enters the viewport, such as `FadeIn`, `BounceIn`, `ArcIn`. They are triggered by the `viewEnter` trigger.
+- **Scroll**: Scroll-driven effects tied to viewport position, such as `ParallaxScroll`, `FadeScroll`, `GrowScroll`. They are triggered by the `viewProgress` trigger.
+- **Mouse**: Pointer-driven effects that respond to cursor movement, such as `Tilt3DMouse`, `TrackMouse`, `ScaleMouse`. They are triggered by the `pointerMove` trigger.
+- **Ongoing**: Looping animations for continuous attention, such as `Pulse`, `Spin`, `Wiggle`. They are compatible with `hover`, `click`, or any trigger.
+
+## Set up a named effect
+
+To use a named effect, you need to:
+
+<Steps>
+  <Step title="Install motion presets">
+
+    Install the `@wix/motion-presets` package:
+
+    ```bash
+    npm install @wix/motion-presets
+    ```
+
+  </Step>
+  <Step title="Register effects">
+    Import the named effects you want to use, and register them with Interact:
+
+    ```typescript
+    import { FadeIn, BounceIn } from "@wix/motion-presets";
+
+    Interact.registerEffects({ FadeIn, BounceIn });
+    ```
+
+  </Step>
+  <Step title="Specify a named effect in your Interaction's config">
+    Specify the effect name as the `type` of the object in the `namedEffect` property.
+
+    <Tabs>
+      <Tab title="React">
+
+      ```tsx
+      import React, { useEffect } from "react";
+      import { Interact, Interaction, InteractConfig } from "@wix/interact/react";
+      import { FadeIn } from "@wix/motion-presets";
+
+      Interact.registerEffects({ FadeIn });
+
+      const config: InteractConfig = {
+        interactions: [
+          {
+            key: "hero",
+            trigger: "viewEnter",
+            effects: [
+              {
+                namedEffect: { type: "FadeIn" },
+                duration: 1000,
+              },
+            ],
+          },
+        ],
+      };
+
+      function App() {
+        useEffect(() => {
+          const instance = Interact.create(config);
+          return () => instance.destroy();
+        }, []);
+
+        return (
+          <Interaction tagName="div" interactKey="hero">
+            <h1>Welcome</h1>
+          </Interaction>
+        );
+      }
+
+      export default App;
+      ```
+
+      </Tab>
+      <Tab title="Web Components">
+
+      ```typescript
+      import { Interact } from "@wix/interact/web";
+      import { FadeIn } from "@wix/motion-presets";
+
+      Interact.registerEffects({ FadeIn }); // TODO registerEffects() is not in API ref! Typedoc doesn't pick it up. Why?
+
+      const config = {
+        interactions: [
+          {
+            key: "hero",
+            trigger: "viewEnter",
+            effects: [
+              {
+                namedEffect: { type: "FadeIn" },
+                duration: 1000,
+              },
+            ],
+          },
+        ],
+      };
+
+      Interact.create(config);
+      ```
+
+      </Tab>
+    </Tabs>
+
+  </Step>
+</Steps>
+
+TODO ADD VISUAL DEMONSTRATION
+
+## Customize a named effect
+
+Many named effects accept optional parameters that let you control how the animation looks and behaves. Common parameters include:
+
+| Parameter   | Description                             | Example values                           |
+| ----------- | --------------------------------------- | ---------------------------------------- |
+| `direction` | Where the animation originates          | `"top"`, `"bottom"`, `"left"`, `"right"` |
+| `power`     | Intensity of the effect                 | `"soft"`, `"medium"`, `"hard"`           |
+| `speed`     | Movement speed for scroll-based effects | `0.5`, `1`, `2`                          |
+
+To customize the named effect, specify these parameters in the `namedEffect` object:
+
+```typescript
+effects: [
+  {
+    namedEffect: {
+      type: "FadeIn",
+      direction: "left",
+      power: "soft",
+    },
+    duration: 800,
+  },
+];
+```
+
+TODO ADD VISUAL DEMONSTRATION
+
+Learn more about [customizing named effects](ADDLINK).
+
+## See also
+
+- [About Wix Interact](/getting-started/introduction)
+- [Set Up Your First Interaction](/getting-started/quickstart)
+- [Effects and Animations](/configuration/effects/intro)

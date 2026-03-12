@@ -15,9 +15,13 @@ Use the interaction's `key` parameter to specify the element to run the interact
 2. Custom Selector (if specified): selector: '.my-element'.
 3. First Child (fallback): The first child element of the interact-element.
 
-> **Note**: When `interaction.key` is missing, the selected element defaults to `effect.key`. However, `selector` and `listContainer` are not inherited from the Interaction's config to the Effect's config. // TODO CLARIFY
+<Callout type="warning">
+  Each effect must have its own `selector` and `listContainer`, as these
+  properties are not inherited from the parent interaction. The only exception
+  is `key`: if an effect omits `key`, it defaults to the interaction's `key`.
+</Callout>
 
-### Basic Selector Usage
+### Using selectors
 
 ```ts
 const config: InteractConfig = {
@@ -39,15 +43,15 @@ const config: InteractConfig = {
 };
 ```
 
-VISUAL DEMONSTRATION
+TODO: ADD VISUAL DEMONSTRATION
 
 ### Selecting an element with children
 
-TODO EXPLAIN IN MORE DETAIL
+When an element contains children you want to animate independently, use `selector` and `listContainer` to reach into the subtree:
 
-- **`selector`**: Selects all matching elements using CSS selector (querySelectorAll)
-- **`listContainer`**: Selects a container for targeting its child elements for list-based interactions
-- **Combined**: Use both to select elements within list items
+- **`selector`**: Uses `querySelectorAll` to find the matched element, so you can target any descendant element by CSS selector.
+- **`listContainer`**: Designates a container whose direct children are treated as list items. Interact automatically tracks additions and removals inside this container.
+- **Combined**: When both are set, `listContainer` first selects the container, then `selector` picks elements within each list item.
 
 ```ts
 // Using selector with listContainer
@@ -70,7 +74,7 @@ TODO EXPLAIN IN MORE DETAIL
 }
 ```
 
-VISUAL DEMONSTRATION
+TODO: ADDVISUAL DEMONSTRATION
 
 ## OPTIONAL: Advanced Selector Examples
 

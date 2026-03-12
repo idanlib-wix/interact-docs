@@ -1,50 +1,42 @@
 ---
-title: "Introduction"
-description: "Getting started with Interact"
+title: "About Interact"
+# description: "Learn what Wix Interact is and how it works"
 ---
 
-## What's Interact?
+Interact is a library for creating web animations and effects triggered by user actions such as clicking, hovering, or scrolling. You can use it to build responsive animations that interact with different elements on the page, work across different devices, and conform to accessibility preferences.
 
-Interact is a library for interactive animations and effects triggered by user actions like clicking, hovering, or scrolling. It integrates with Motion for smooth, performant animations.
+<Info>
+  Interact comes bundled with `@wix/motion`, its default animation engine.
+  However, you can choose to use Interact with other animation engines of your
+  choice.
+</Info>
 
-## Core concepts
+## Anatomy of an Interaction
 
-Before you start, understand the three main concepts:
+An Interaction defines a cause-and-effect relationship between an action and a visual change on the page. Each Interaction has a [`config` object](ADDLINK) that defines what the interaction does, what triggers it, and which elements it affects.
 
-1. **Triggers**: User actions that start an interaction (click, hover, scroll)
-2. **Effects**: The visual changes that happen (animations, transitions, style changes). You can use premade effects made by Wix, called named effects (LINK), or create your own custom effects.
-3. **Elements**: The HTML elements that participate in the interaction
+The Interaction's `config` includes at least the following properties:
 
-## Understanding the configuration
-
-Let's break down what each part does.
-
-### The `interactions` array
-
-This contains all your interactions. Each interaction defines:
-
-- `key`: Which element triggers the interaction
-- `trigger`: What user action starts it
-- `effects`: What animations happen
+- `key`: Unique identifier for the page element the interaction applies to
+- `trigger`: User action that initiates the interaction, such as clicking, hovering, or scrolling
+- `effects`: Animation or visual change that occurs on the page element when the trigger activates
 
 Learn more about [configuring an interaction](ADDLINK).
 
-### The `effects` object
+## Reusing effects
 
-TODO add aanother exaple (or add to existing) a named effect.
-
-TODO named effects are a separate library, they need a separate section in the docs.
-
-Define reusable effects that you can reference by their `effectId`:
+You can define effects once in the top-level `effects` object, and then reuse them across multiple interactions:
 
 ```typescript
+import { Interact } from "@wix/interact";
+
 const config = {
   effects: {
     "fade-in": {
-      // Define a reusable effect
+      // Define a reusable effect called "fade-in"
       duration: 1000,
       keyframeEffect: {
-        name: "fade-in",
+        name: "fade-in", // Set up its ID
         keyframes: [{ opacity: 0 }, { opacity: 1 }],
       },
     },
@@ -53,17 +45,27 @@ const config = {
     {
       key: "hero",
       trigger: "viewEnter",
-      effects: [{ effectId: "fade-in" }], // Reference the effect
+      effects: [{ effectId: "fade-in" }], // Reference the reusable effect by its ID
     },
   ],
 };
+
+Interact.create(config);
 ```
 
-Learn more about [effects](ADDLINK).
+TODO ADD VISUAL DEMONSTRATION
+
+<Tip>
+  Wix also provides a library of pre-made animations you can import and use in
+  your Interactions. Learn more about [named effects](ADDLINK).
+</Tip>
 
 ## TypeScript support
 
-Both entry points provide full TypeScript support:
+Interact provides full TypeScript support. The `InteractConfig` type validates your configuration, including trigger names, effect properties, and more:
+
+<Tabs>
+  <Tab title="React">
 
 ```typescript
 import { Interact, InteractConfig, Interaction } from "@wix/interact/react";
@@ -72,7 +74,7 @@ const config: InteractConfig = {
   interactions: [
     {
       key: "hero",
-      trigger: "viewEnter", // TypeScript validates trigger types
+      trigger: "viewEnter",
       effects: [
         {
           duration: 1000,
@@ -87,6 +89,25 @@ const config: InteractConfig = {
   effects: {},
 };
 
-// Full type inference
 const instance = Interact.create(config);
+```
+
+  </Tab>
+  <Tab title="JavaScript">
+
+```typescript
+import { Interact } from "@wix/interact";
+```
+
+  </Tab>
+</Tabs>
+
+## See also
+
+- [Set Up Your First Interaction](/getting-started/quickstart)
+- [Named Effects](/getting-started/named-effects)
+- [Configuration](/configuration/configuration/intro)
+
+```
+
 ```
