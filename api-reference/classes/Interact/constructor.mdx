@@ -1,0 +1,227 @@
+---
+title: "constructor"
+---
+
+#### Constructor
+
+> **new Interact**(): `Interact`
+
+#### Returns
+
+`Interact`
+
+<ResponseField name="addedInteractions" type="object" required>
+
+</ResponseField>
+
+<ResponseField name="controllers" type="Set<IInteractionController>" required>
+
+
+
+<Accordion title="IInteractionController">
+<ParamField body="\_observers" type="WeakMap<HTMLElement, MutationObserver>" required>
+
+</ParamField>
+
+<ParamField body="connected" type="boolean" required>
+
+</ParamField>
+
+<ParamField body="element" type="HTMLElement" required>
+
+</ParamField>
+
+<ParamField body="key" type="string | undefined" required>
+
+</ParamField>
+
+<ParamField body="sheet" type="CSSStyleSheet | null" required>
+
+</ParamField>
+
+<ParamField body="useFirstChild" type="boolean" required>
+
+</ParamField>
+
+<ParamField body="listContainer" type="string" required>
+
+
+</ParamField>
+
+<ParamField body="entries" type="MutationRecord[]" required>
+
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+
+</ParamField>
+
+<ParamField body="options" type="object">
+
+
+</ParamField>
+
+<ParamField body="removeFromCache" type="boolean">
+
+</ParamField>
+
+<ParamField body="cssRules" type="string[]" required>
+
+
+</ParamField>
+
+<ParamField body="effectId" type="string" required>
+
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;" required>
+
+
+</ParamField>
+
+<ParamField body="item" type="HTMLElement | null">
+
+
+</ParamField>
+
+<ParamField body="isLegacy" type="boolean">
+
+
+</ParamField>
+
+<ParamField body="listContainer" type="string" required>
+
+
+</ParamField>
+</Accordion>
+
+</ResponseField>
+
+<ResponseField name="dataCache" type="InteractCache" required>
+
+</ResponseField>
+
+<ResponseField name="listInteractionsCache" type="object" required>
+
+</ResponseField>
+
+<ResponseField name="mediaQueryListeners" type="Map<string, object>" required>
+
+</ResponseField>
+
+<ResponseField name="allowA11yTriggers" type="boolean" required>
+
+</ResponseField>
+
+<ResponseField name="controllerCache" type="Map<string, IInteractionController>" required>
+
+
+
+<Accordion title="IInteractionController">
+<ParamField body="\_observers" type="WeakMap<HTMLElement, MutationObserver>" required>
+
+</ParamField>
+
+<ParamField body="connected" type="boolean" required>
+
+</ParamField>
+
+<ParamField body="element" type="HTMLElement" required>
+
+</ParamField>
+
+<ParamField body="key" type="string | undefined" required>
+
+</ParamField>
+
+<ParamField body="sheet" type="CSSStyleSheet | null" required>
+
+</ParamField>
+
+<ParamField body="useFirstChild" type="boolean" required>
+
+</ParamField>
+
+<ParamField body="listContainer" type="string" required>
+
+
+</ParamField>
+
+<ParamField body="entries" type="MutationRecord[]" required>
+
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+
+</ParamField>
+
+<ParamField body="options" type="object">
+
+
+</ParamField>
+
+<ParamField body="removeFromCache" type="boolean">
+
+</ParamField>
+
+<ParamField body="cssRules" type="string[]" required>
+
+
+</ParamField>
+
+<ParamField body="effectId" type="string" required>
+
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;" required>
+
+
+</ParamField>
+
+<ParamField body="item" type="HTMLElement | null">
+
+
+</ParamField>
+
+<ParamField body="isLegacy" type="boolean">
+
+
+</ParamField>
+
+<ParamField body="listContainer" type="string" required>
+
+
+</ParamField>
+</Accordion>
+
+</ResponseField>
+
+<ResponseField name="defineInteractElement" type="() => boolean">
+
+</ResponseField>
+
+<ResponseField name="elementSequenceMap" type="WeakMap<HTMLElement, Set<Sequence>>" required>
+
+</ResponseField>
+
+<ResponseField name="forceReducedMotion" type="boolean" required>
+
+</ResponseField>
+
+<ResponseField name="instances" type="Interact[]" required>
+
+</ResponseField>
+
+<ResponseField name="registerEffects" type="(effects: Record<string, EffectModule>) => void" required>
+
+</ResponseField>
+
+<ResponseField name="sequenceCache" type="Map<string, Sequence>" required>
+
+</ResponseField>
