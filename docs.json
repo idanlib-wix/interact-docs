@@ -98,162 +98,77 @@
         "tab": "API reference",
         "groups": [
           {
-            "group": "Core API",
+            "group": "Overview",
             "pages": [
-              "api-reference/overview",
-              "api-reference/core-api/config",
-              "api-reference/core-api/config-interaction",
-              "api-reference/core-api/config-effect",
-              "api-reference/core-api/config-condition"
+              "api-reference/overview"
             ]
           },
           {
-            "group": "Classes",
+            "group": "Interact",
+            "expanded": false,
             "pages": [
+              "api-reference/classes/Interact/constructor",
               {
-                "group": "Interact",
-                "expanded": false,
+                "group": "Properties",
                 "pages": [
-                  "api-reference/classes/create",
-                  "api-reference/classes/registerEffects",
-                  "api-reference/classes/destroy"
+                  "api-reference/classes/Interact/addedInteractions",
+                  "api-reference/classes/Interact/allowA11yTriggers",
+                  "api-reference/classes/Interact/controllerCache",
+                  "api-reference/classes/Interact/controllers",
+                  "api-reference/classes/Interact/dataCache",
+                  "api-reference/classes/Interact/defineInteractElement",
+                  "api-reference/classes/Interact/elementSequenceMap",
+                  "api-reference/classes/Interact/forceReducedMotion",
+                  "api-reference/classes/Interact/instances",
+                  "api-reference/classes/Interact/listInteractionsCache",
+                  "api-reference/classes/Interact/mediaQueryListeners",
+                  "api-reference/classes/Interact/registerEffects",
+                  "api-reference/classes/Interact/sequenceCache"
                 ]
               },
-              "api-reference/classes/InteractionController"
-            ]
-          },
-          {
-            "group": "Integrations",
-            "pages": [
               {
-                "group": "React",
-                "expanded": false,
+                "group": "Methods",
                 "pages": [
-                  "api-reference/integrations/react/Interaction",
-                  "api-reference/integrations/react/createInteractRef"
+                  "api-reference/classes/Interact/addToSequence",
+                  "api-reference/classes/Interact/clearInteractionStateForKey",
+                  "api-reference/classes/Interact/clearMediaQueryListenersForKey",
+                  "api-reference/classes/Interact/create",
+                  "api-reference/classes/Interact/deleteController",
+                  "api-reference/classes/Interact/destroy",
+                  "api-reference/classes/Interact/get",
+                  "api-reference/classes/Interact/getController",
+                  "api-reference/classes/Interact/getInstance",
+                  "api-reference/classes/Interact/getSequence",
+                  "api-reference/classes/Interact/has",
+                  "api-reference/classes/Interact/init",
+                  "api-reference/classes/Interact/removeFromSequences",
+                  "api-reference/classes/Interact/setController",
+                  "api-reference/classes/Interact/setup",
+                  "api-reference/classes/Interact/setupMediaQueryListener",
+                  "api-reference/classes/Interact/static_deleteController",
+                  "api-reference/classes/Interact/static_destroy",
+                  "api-reference/classes/Interact/static_setController"
                 ]
               }
             ]
           },
           {
-            "group": "Standalone",
+            "group": "Functions",
             "pages": [
-              {
-                "group": "Functions",
-                "expanded": false,
-                "pages": [
-                  "api-reference/standalone-elements/functions/add",
-                  "api-reference/standalone-elements/functions/remove",
-                  "api-reference/standalone-elements/functions/generate"
-                ]
-              },
-              "api-reference/standalone-elements/interact-element"
+              "api-reference/functions/add",
+              "api-reference/functions/generate",
+              "api-reference/functions/remove"
             ]
           },
           {
-            "group": "Generated Reference",
+            "group": "Types",
             "pages": [
-              {
-                "group": "Classes and Interfaces",
-                "pages": [
-                  {
-                    "group": "Interact",
-                    "expanded": false,
-                    "pages": [
-                      "api-reference/generated/classes/Interact/constructor",
-                      {
-                        "group": "Properties",
-                        "pages": [
-                          "api-reference/generated/classes/Interact/addedInteractions",
-                          "api-reference/generated/classes/Interact/controllers",
-                          "api-reference/generated/classes/Interact/dataCache",
-                          "api-reference/generated/classes/Interact/listInteractionsCache",
-                          "api-reference/generated/classes/Interact/mediaQueryListeners",
-                          "api-reference/generated/classes/Interact/allowA11yTriggers",
-                          "api-reference/generated/classes/Interact/controllerCache",
-                          "api-reference/generated/classes/Interact/defineInteractElement",
-                          "api-reference/generated/classes/Interact/forceReducedMotion",
-                          "api-reference/generated/classes/Interact/instances",
-                          "api-reference/generated/classes/Interact/registerEffects"
-                        ]
-                      },
-                      {
-                        "group": "Methods",
-                        "pages": [
-                          "api-reference/generated/classes/Interact/clearInteractionStateForKey",
-                          "api-reference/generated/classes/Interact/clearMediaQueryListenersForKey",
-                          "api-reference/generated/classes/Interact/deleteController",
-                          "api-reference/generated/classes/Interact/destroy",
-                          "api-reference/generated/classes/Interact/get",
-                          "api-reference/generated/classes/Interact/has",
-                          "api-reference/generated/classes/Interact/init",
-                          "api-reference/generated/classes/Interact/setController",
-                          "api-reference/generated/classes/Interact/setupMediaQueryListener",
-                          "api-reference/generated/classes/Interact/create",
-                          "api-reference/generated/classes/Interact/static_deleteController",
-                          "api-reference/generated/classes/Interact/static_destroy",
-                          "api-reference/generated/classes/Interact/getController",
-                          "api-reference/generated/classes/Interact/getInstance",
-                          "api-reference/generated/classes/Interact/static_setController",
-                          "api-reference/generated/classes/Interact/setup"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "group": "IInteractionController",
-                    "expanded": false,
-                    "pages": [
-                      {
-                        "group": "Properties",
-                        "pages": [
-                          "api-reference/generated/interfaces/IInteractionController/__observers",
-                          "api-reference/generated/interfaces/IInteractionController/connected",
-                          "api-reference/generated/interfaces/IInteractionController/element",
-                          "api-reference/generated/interfaces/IInteractionController/key",
-                          "api-reference/generated/interfaces/IInteractionController/sheet",
-                          "api-reference/generated/interfaces/IInteractionController/useFirstChild"
-                        ]
-                      },
-                      {
-                        "group": "Methods",
-                        "pages": [
-                          "api-reference/generated/interfaces/IInteractionController/_childListChangeHandler",
-                          "api-reference/generated/interfaces/IInteractionController/connect",
-                          "api-reference/generated/interfaces/IInteractionController/disconnect",
-                          "api-reference/generated/interfaces/IInteractionController/getActiveEffects",
-                          "api-reference/generated/interfaces/IInteractionController/renderStyle",
-                          "api-reference/generated/interfaces/IInteractionController/toggleEffect",
-                          "api-reference/generated/interfaces/IInteractionController/update",
-                          "api-reference/generated/interfaces/IInteractionController/watchChildList"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "group": "Functions",
-                "pages": [
-                  "api-reference/generated/functions/add",
-                  "api-reference/generated/functions/generate",
-                  "api-reference/generated/functions/remove"
-                ]
-              },
-              {
-                "group": "Types: Internal only",
-                "pages": [
-                  "api-reference/generated/type-aliases/InteractOptions",
-                  "api-reference/generated/type-aliases/InteractionParamsTypes",
-                  "api-reference/generated/type-aliases/AnimationOptions",
-                  "api-reference/generated/type-aliases/CreateTransitionCSSParams",
-                  "api-reference/generated/type-aliases/TriggerHandlerMap",
-                  "api-reference/generated/type-aliases/ViewEnterHandlerModule",
-                  "api-reference/generated/type-aliases/HandlerObject",
-                  "api-reference/generated/type-aliases/HandlerObjectMap",
-                  "api-reference/generated/type-aliases/InteractionHandlerModule"
-                ]
-              }
+              "api-reference/type-aliases/AnimationOptions",
+              "api-reference/type-aliases/EventTriggerConfigToggle",
+              "api-reference/type-aliases/EventTriggerKind",
+              "api-reference/type-aliases/EventTriggerParams",
+              "api-reference/type-aliases/InteractOptions",
+              "api-reference/type-aliases/SequenceOptionsConfig"
             ]
           }
         ]

@@ -1,0 +1,864 @@
+---
+title: "create() (static)"
+---
+
+> `static` **create**(`config`, `options?`): `Interact`
+
+#### Parameters
+
+<Accordion title="Properties">
+
+<ParamField body="config" type="InteractConfig" required>
+
+
+
+
+<Accordion title="InteractConfig">
+<ParamField body="conditions" type="Record<string, Condition>">
+
+
+
+<Accordion title="Condition">
+<ParamField body="predicate" type="string">
+
+</ParamField>
+
+<ParamField body="type" type="&quot;media&quot; | &quot;container&quot; | &quot;selector&quot;" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="effects" type="Record<string, Effect>" required>
+
+
+
+<Accordion title="Effect">
+One of the following:
+
+<Accordion title="EffectBase & TimeEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number" required>
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="triggerType" type="&quot;once&quot; | &quot;repeat&quot; | &quot;alternate&quot; | &quot;state&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="ScrubEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="centeredToTarget" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="rangeEnd" type="RangeOffset">
+
+
+
+<Accordion title="RangeOffset">
+<ParamField body="name" type="&quot;entry&quot; | &quot;exit&quot; | &quot;contain&quot; | &quot;cover&quot; | &quot;entry-crossing&quot; | &quot;exit-crossing&quot;">
+
+</ParamField>
+
+<ParamField body="offset" type="LengthPercentage">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="rangeStart" type="RangeOffset">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="transitionDelay" type="number">
+
+</ParamField>
+
+<ParamField body="transitionDuration" type="number">
+
+</ParamField>
+
+<ParamField body="transitionEasing" type="ScrubTransitionEasing">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="StateEffect">
+<ParamField body="effectId" type="string">
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;">
+
+</ParamField>
+
+<ParamField body="transition" type="TransitionOptions & object">
+
+
+<ParamField body="styleProperties" type="StyleProperty[]" required>
+
+
+
+<Accordion title="StyleProperty">
+<ParamField body="name" type="string" required>
+
+</ParamField>
+
+<ParamField body="value" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+
+
+
+<Accordion title="TransitionOptions">
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="transitionProperties" type="TransitionProperty[]">
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="interactions" type="Interaction[]" required>
+
+
+
+<Accordion title="Interaction">
+<ParamField body="effects" type="Effect | EffectRef & object[]">
+
+
+
+<Accordion title="EffectRef">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="sequences" type="(SequenceConfig | SequenceConfigRef)[]">
+
+
+
+One of the following:
+
+<Accordion title="SequenceConfig">
+<ParamField body="effects" type="(Effect | EffectRef)[]" required>
+
+</ParamField>
+</Accordion>
+
+<Accordion title="SequenceConfigRef">
+<ParamField body="sequenceId" type="string" required>
+
+</ParamField>
+
+<ParamField body="conditions" type="string[]">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="offset" type="number">
+
+</ParamField>
+
+<ParamField body="offsetEasing" type="string | ((p) => number)">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="sequences" type="Record<string, SequenceConfig>">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<Accordion title="Properties">
+
+<ParamField body="conditions" type="Record<string, Condition>">
+
+
+
+<Accordion title="Condition">
+<ParamField body="predicate" type="string">
+
+</ParamField>
+
+<ParamField body="type" type="&quot;media&quot; | &quot;container&quot; | &quot;selector&quot;" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="effects" type="Record<string, Effect>" required>
+
+
+
+<Accordion title="Effect">
+One of the following:
+
+<Accordion title="EffectBase & TimeEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number" required>
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="triggerType" type="&quot;once&quot; | &quot;repeat&quot; | &quot;alternate&quot; | &quot;state&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="ScrubEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="centeredToTarget" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="rangeEnd" type="RangeOffset">
+
+
+
+<Accordion title="RangeOffset">
+<ParamField body="name" type="&quot;entry&quot; | &quot;exit&quot; | &quot;contain&quot; | &quot;cover&quot; | &quot;entry-crossing&quot; | &quot;exit-crossing&quot;">
+
+</ParamField>
+
+<ParamField body="offset" type="LengthPercentage">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="rangeStart" type="RangeOffset">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="transitionDelay" type="number">
+
+</ParamField>
+
+<ParamField body="transitionDuration" type="number">
+
+</ParamField>
+
+<ParamField body="transitionEasing" type="ScrubTransitionEasing">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="StateEffect">
+<ParamField body="effectId" type="string">
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;">
+
+</ParamField>
+
+<ParamField body="transition" type="TransitionOptions & object">
+
+
+<ParamField body="styleProperties" type="StyleProperty[]" required>
+
+
+
+<Accordion title="StyleProperty">
+<ParamField body="name" type="string" required>
+
+</ParamField>
+
+<ParamField body="value" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+
+
+
+<Accordion title="TransitionOptions">
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="transitionProperties" type="TransitionProperty[]">
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="interactions" type="Interaction[]" required>
+
+
+
+<Accordion title="Interaction">
+<ParamField body="effects" type="Effect | EffectRef & object[]">
+
+
+
+One of the following:
+
+<Accordion title="Effect">
+One of the following:
+
+<Accordion title="EffectBase & TimeEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number" required>
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="triggerType" type="&quot;once&quot; | &quot;repeat&quot; | &quot;alternate&quot; | &quot;state&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="ScrubEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="centeredToTarget" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="rangeEnd" type="RangeOffset">
+
+
+
+<Accordion title="RangeOffset">
+<ParamField body="name" type="&quot;entry&quot; | &quot;exit&quot; | &quot;contain&quot; | &quot;cover&quot; | &quot;entry-crossing&quot; | &quot;exit-crossing&quot;">
+
+</ParamField>
+
+<ParamField body="offset" type="LengthPercentage">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="rangeStart" type="RangeOffset">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="transitionDelay" type="number">
+
+</ParamField>
+
+<ParamField body="transitionDuration" type="number">
+
+</ParamField>
+
+<ParamField body="transitionEasing" type="ScrubTransitionEasing">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="StateEffect">
+<ParamField body="effectId" type="string">
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;">
+
+</ParamField>
+
+<ParamField body="transition" type="TransitionOptions & object">
+
+
+<ParamField body="styleProperties" type="StyleProperty[]" required>
+
+
+
+<Accordion title="StyleProperty">
+<ParamField body="name" type="string" required>
+
+</ParamField>
+
+<ParamField body="value" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+
+
+
+<Accordion title="TransitionOptions">
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="transitionProperties" type="TransitionProperty[]">
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+<Accordion title="EffectRef">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="sequences" type="(SequenceConfig | SequenceConfigRef)[]">
+
+
+
+One of the following:
+
+<Accordion title="SequenceConfig">
+<ParamField body="effects" type="(Effect | EffectRef)[]" required>
+
+</ParamField>
+</Accordion>
+
+<Accordion title="SequenceConfigRef">
+<ParamField body="sequenceId" type="string" required>
+
+</ParamField>
+
+<ParamField body="conditions" type="string[]">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="offset" type="number">
+
+</ParamField>
+
+<ParamField body="offsetEasing" type="string | ((p) => number)">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="sequences" type="Record<string, SequenceConfig>">
+
+
+
+<Accordion title="SequenceConfig">
+<ParamField body="effects" type="(Effect | EffectRef)[]" required>
+
+
+
+One of the following:
+
+<Accordion title="Effect">
+One of the following:
+
+<Accordion title="EffectBase & TimeEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number" required>
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="triggerType" type="&quot;once&quot; | &quot;repeat&quot; | &quot;alternate&quot; | &quot;state&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="ScrubEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="centeredToTarget" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="rangeEnd" type="RangeOffset">
+
+
+
+<Accordion title="RangeOffset">
+<ParamField body="name" type="&quot;entry&quot; | &quot;exit&quot; | &quot;contain&quot; | &quot;cover&quot; | &quot;entry-crossing&quot; | &quot;exit-crossing&quot;">
+
+</ParamField>
+
+<ParamField body="offset" type="LengthPercentage">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="rangeStart" type="RangeOffset">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="transitionDelay" type="number">
+
+</ParamField>
+
+<ParamField body="transitionDuration" type="number">
+
+</ParamField>
+
+<ParamField body="transitionEasing" type="ScrubTransitionEasing">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="StateEffect">
+<ParamField body="effectId" type="string">
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;">
+
+</ParamField>
+
+<ParamField body="transition" type="TransitionOptions & object">
+
+
+<ParamField body="styleProperties" type="StyleProperty[]" required>
+
+
+
+<Accordion title="StyleProperty">
+<ParamField body="name" type="string" required>
+
+</ParamField>
+
+<ParamField body="value" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+
+
+
+<Accordion title="TransitionOptions">
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="transitionProperties" type="TransitionProperty[]">
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+<Accordion title="EffectRef">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+</Accordion>
+
+<ParamField body="options" type="any">
+
+
+</ParamField>
+
+<Accordion title="Properties">
+
+<ParamField body="useCustomElement" type="boolean">
+
+</ParamField>
+
+</Accordion>
+</Accordion>
+
+#### Returns
+
+`void`

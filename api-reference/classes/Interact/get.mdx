@@ -1,0 +1,386 @@
+---
+title: "get()"
+---
+
+> **get**(`key`): \{ `effects`: `Record`\<`string`, `InteractionTrigger` & `object`[]\>; `interactionIds`: `Set`\<`string`\>; `selectors`: `Set`\<`string`\>; `sequences`: `Record`\<`string`, `InteractionTrigger` & `object`[]\>; `triggers`: `Interaction`[]; \} | `undefined`
+
+#### Parameters
+
+<ParamField body="key" type="string" required>
+
+
+</ParamField>
+
+#### Returns
+
+Returns an object with the following fields, or `undefined`:
+
+<ResponseField name="effects" type="Record&lt;string, InteractionTrigger &amp; object[]&gt;">
+
+
+
+<Accordion title="InteractionTrigger">
+<ParamField body="conditions" type="string[]">
+
+</ParamField>
+
+<ParamField body="key" type="string" required>
+
+</ParamField>
+
+<ParamField body="listContainer" type="string">
+
+</ParamField>
+
+<ParamField body="listItemSelector" type="string">
+
+</ParamField>
+
+<ParamField body="params" type="TriggerParams">
+
+
+
+<Accordion title="TriggerParams">
+One of the following:
+
+<Accordion title="ViewEnterParams">
+<ParamField body="inset" type="string">
+
+</ParamField>
+
+<ParamField body="threshold" type="number">
+
+</ParamField>
+
+<ParamField body="useSafeViewEnter" type="boolean">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="PointerMoveParams">
+<ParamField body="axis" type="&quot;x&quot; | &quot;y&quot;">
+
+</ParamField>
+
+<ParamField body="hitArea" type="&quot;root&quot; | &quot;self&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="AnimationEndParams">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="selector" type="string">
+
+</ParamField>
+
+<ParamField body="trigger" type="&quot;hover&quot; | &quot;click&quot; | &quot;viewEnter&quot; | &quot;pageVisible&quot; | &quot;animationEnd&quot; | &quot;viewProgress&quot; | &quot;pointerMove&quot; | &quot;activate&quot; | &quot;interest&quot;" required>
+
+</ParamField>
+</Accordion>
+
+</ResponseField>
+
+<ResponseField name="interactionIds" type="Set&lt;string&gt;">
+
+</ResponseField>
+
+<ResponseField name="selectors" type="Set&lt;string&gt;">
+
+</ResponseField>
+
+<ResponseField name="sequences" type="Record&lt;string, InteractionTrigger &amp; object[]&gt;">
+
+
+
+<Accordion title="InteractionTrigger">
+<ParamField body="conditions" type="string[]">
+
+</ParamField>
+
+<ParamField body="key" type="string" required>
+
+</ParamField>
+
+<ParamField body="listContainer" type="string">
+
+</ParamField>
+
+<ParamField body="listItemSelector" type="string">
+
+</ParamField>
+
+<ParamField body="params" type="TriggerParams">
+
+
+
+<Accordion title="TriggerParams">
+One of the following:
+
+<Accordion title="ViewEnterParams">
+<ParamField body="inset" type="string">
+
+</ParamField>
+
+<ParamField body="threshold" type="number">
+
+</ParamField>
+
+<ParamField body="useSafeViewEnter" type="boolean">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="PointerMoveParams">
+<ParamField body="axis" type="&quot;x&quot; | &quot;y&quot;">
+
+</ParamField>
+
+<ParamField body="hitArea" type="&quot;root&quot; | &quot;self&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="AnimationEndParams">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="selector" type="string">
+
+</ParamField>
+
+<ParamField body="trigger" type="&quot;hover&quot; | &quot;click&quot; | &quot;viewEnter&quot; | &quot;pageVisible&quot; | &quot;animationEnd&quot; | &quot;viewProgress&quot; | &quot;pointerMove&quot; | &quot;activate&quot; | &quot;interest&quot;" required>
+
+</ParamField>
+</Accordion>
+
+</ResponseField>
+
+<ResponseField name="triggers" type="Interaction[]">
+
+
+
+<Accordion title="Interaction">
+<ParamField body="effects" type="Effect | EffectRef & object[]">
+
+
+
+One of the following:
+
+<Accordion title="Effect">
+One of the following:
+
+<Accordion title="EffectBase & TimeEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number" required>
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="triggerType" type="&quot;once&quot; | &quot;repeat&quot; | &quot;alternate&quot; | &quot;state&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="ScrubEffect">
+<ParamField body="alternate" type="boolean">
+
+</ParamField>
+
+<ParamField body="centeredToTarget" type="boolean">
+
+</ParamField>
+
+<ParamField body="composite" type="CompositeOperation">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+
+<ParamField body="fill" type="Fill">
+
+</ParamField>
+
+<ParamField body="iterations" type="number">
+
+</ParamField>
+
+<ParamField body="rangeEnd" type="RangeOffset">
+
+
+
+<Accordion title="RangeOffset">
+<ParamField body="name" type="&quot;entry&quot; | &quot;exit&quot; | &quot;contain&quot; | &quot;cover&quot; | &quot;entry-crossing&quot; | &quot;exit-crossing&quot;">
+
+</ParamField>
+
+<ParamField body="offset" type="LengthPercentage">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="rangeStart" type="RangeOffset">
+
+</ParamField>
+
+<ParamField body="reversed" type="boolean">
+
+</ParamField>
+
+<ParamField body="transitionDelay" type="number">
+
+</ParamField>
+
+<ParamField body="transitionDuration" type="number">
+
+</ParamField>
+
+<ParamField body="transitionEasing" type="ScrubTransitionEasing">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="StateEffect">
+<ParamField body="effectId" type="string">
+
+</ParamField>
+
+<ParamField body="key" type="string">
+
+</ParamField>
+
+<ParamField body="stateAction" type="&quot;add&quot; | &quot;remove&quot; | &quot;toggle&quot; | &quot;clear&quot;">
+
+</ParamField>
+
+<ParamField body="transition" type="TransitionOptions & object">
+
+
+<ParamField body="styleProperties" type="StyleProperty[]" required>
+
+
+
+<Accordion title="StyleProperty">
+<ParamField body="name" type="string" required>
+
+</ParamField>
+
+<ParamField body="value" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+
+
+
+<Accordion title="TransitionOptions">
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="duration" type="number">
+
+</ParamField>
+
+<ParamField body="easing" type="string">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="transitionProperties" type="TransitionProperty[]">
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+<Accordion title="EffectRef">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+
+<ParamField body="sequences" type="(SequenceConfig | SequenceConfigRef)[]">
+
+
+
+One of the following:
+
+<Accordion title="SequenceConfig">
+<ParamField body="effects" type="(Effect | EffectRef)[]" required>
+
+</ParamField>
+</Accordion>
+
+<Accordion title="SequenceConfigRef">
+<ParamField body="sequenceId" type="string" required>
+
+</ParamField>
+
+<ParamField body="conditions" type="string[]">
+
+</ParamField>
+
+<ParamField body="delay" type="number">
+
+</ParamField>
+
+<ParamField body="offset" type="number">
+
+</ParamField>
+
+<ParamField body="offsetEasing" type="string | ((p) => number)">
+
+</ParamField>
+</Accordion>
+
+</ParamField>
+</Accordion>
+
+</ResponseField>
