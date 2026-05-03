@@ -1,27 +1,27 @@
 ---
-title: "Selecting elements"
+title: "Selecting Elements"
 description: "Select which elements to animate"
 ---
 
-## Selecting elements
+Interact provides several properties for specifying which elements to animate: `key`, `listContainer`, `listItemSelector`, and `selector`.
 
-You can specify the element to apply interactions on using the `selector` property. Wix Interact lets you specify exactly which element to use for interactions.
+## How element selection works
 
-### How Element Selection Works
+Every Interaction starts with a `key` that identifies the root element. From this starting point, Interact resolves the source element that specifies what the trigger attaches to, and the target element, which animates when the trigger occurs. 
 
-Use the interaction's `key` parameter to specify the element to run the interaction. Wix Interact follows a priority order to determine which element to run the interaction on:
+Element selection follows this resolve chain: 
 
-1. List Container (if specified): listContainer: '.item-list'. Matches child elements of the selected container using selector, or all its immediate children if not specified.
-2. Custom Selector (if specified): selector: '.my-element'.
-3. First Child (fallback): The first child element of the interact-element.
+1. **`listContainer` + `listItemSelector`**: Matches only elements matching `listItemSelector` in the `listContainer`.
+2. **`listContainer`** only: Matches all immediate children of the container.
+3. **`listContainer` + `selector`**: Matches via `querySelector` in each child of the container.
+4. **`selector` only**: Matches via `querySelectorAll` in the root element.
+5. **Fallback**: When using Web Components, the first child of `<interact-element>`. When using React or vanilla JS, the root element.
 
 <Callout type="warning">
-  Each effect must have its own `selector` and `listContainer`, as these
-  properties are not inherited from the parent interaction. The only exception
-  is `key`: if an effect omits `key`, it defaults to the interaction's `key`.
+  Each effect must have its own `selector` and `listContainer`, as these properties aren't inherited from the parent Interaction. The only exception is `key`: if an effect omits `key`, it defaults to the Interaction's `key`.
 </Callout>
 
-### Using selectors
+This Interaction defines a `FadeIn` effect to apply to an image's overlay:
 
 ```ts
 const config: InteractConfig = {
@@ -34,7 +34,7 @@ const config: InteractConfig = {
         {
           key: "card-container",
           selector: ".card-overlay", // Select the overlay within the card
-          namedEffect: "FadeIn",
+          namedEffect: { type: "FadeIn" },
           duration: 300,
         },
       ],
@@ -49,9 +49,9 @@ TODO: ADD VISUAL DEMONSTRATION
 
 When an element contains children you want to animate independently, use `selector` and `listContainer` to reach into the subtree:
 
-- **`selector`**: Uses `querySelectorAll` to find the matched element, so you can target any descendant element by CSS selector.
+- **`selector`**: Uses `querySelectorAll` to find all matching elements, so you can target any descendant by CSS selector.
 - **`listContainer`**: Designates a container whose direct children are treated as list items. Interact automatically tracks additions and removals inside this container.
-- **Combined**: When both are set, `listContainer` first selects the container, then `selector` picks elements within each list item.
+- **Combined**: When both are set, `listContainer` first selects the container, then `selector` picks elements in each list item.
 
 ```ts
 // Using selector with listContainer
@@ -64,7 +64,7 @@ When an element contains children you want to animate independently, use `select
     {
       key: 'product-grid',
       listContainer: '.products',
-      selector: '.product-overlay', // querySelectorAll finds all overlays as list items
+      selector: '.product-overlay', // Target the overlay within each list item
       namedEffect: {
         type: 'FadeIn',
       },
@@ -74,13 +74,17 @@ When an element contains children you want to animate independently, use `select
 }
 ```
 
-TODO: ADDVISUAL DEMONSTRATION
+TODO: ADD VISUAL DEMONSTRATION
 
-## OPTIONAL: Advanced Selector Examples
+## Advanced selector examples
 
-### Card Component with Multiple Interactive Areas
+The following examples demonstrate advanced element selection patterns:
 
-```typescript
+### Card component with multiple interactive areas
+
+This example wires different triggers to different parts of the same component. The card image triggers a lift effect on the entire card, while the CTA button has its own click animation.
+
+```ts
 const cardConfig: InteractConfig = {
   effects: {
     "card-lift": {
@@ -159,9 +163,11 @@ const cardConfig: InteractConfig = {
 };
 ```
 
-### Navigation Menu with Nested Selectors
+### Navigation menu with nested selectors
 
-```typescript
+This example uses `listContainer` to scope the trigger to menu items with dropdowns, and `selector` to target the dropdown and highlight elements within each item.
+
+```ts
 const navConfig: InteractConfig = {
   effects: {
     "dropdown-slide": {
@@ -214,9 +220,11 @@ const navConfig: InteractConfig = {
 };
 ```
 
-### Gallery with Dynamic Item Selection
+### Gallery with dynamic item selection
 
-```typescript
+This example uses `listContainer` to observe all items in a gallery grid, with `selector` targeting different child elements for the trigger and effect.
+
+```ts
 const galleryConfig: InteractConfig = {
   effects: {
     "image-overlay": {
@@ -240,7 +248,7 @@ const galleryConfig: InteractConfig = {
         {
           key: "image-gallery",
           listContainer: ".gallery-grid",
-          selector: ".gallery-item .overlay", // Overlay within each item
+          selector: ".gallery-item .overlay", // Overlay in each item
           effectId: "image-overlay",
         },
       ],
@@ -248,3 +256,9 @@ const galleryConfig: InteractConfig = {
   ],
 };
 ```
+
+## See also
+
+- [About the config object](configuration/configuration/intro)
+- [Common patterns](configuration/configuration/common-patterns)
+- [Lists and dynamic content](configuration/lists/intro)

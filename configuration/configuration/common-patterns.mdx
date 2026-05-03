@@ -1,76 +1,324 @@
 ---
 title: "Common Patterns"
-description: "Common patterns for building interactions"
+description: "Reusable patterns for common Interaction scenarios"
 ---
 
-TODO move to later in the Configuration section.
+Many common Interaction scenarios, including hover effects, click toggles, scroll-driven animations, entrance animations, and pointer tracking, share common configuration patterns you can reuse.
 
 ## Hover with scale and rotation
 
-```javascript
-{
-    key: 'my-element',
-    trigger: 'hover',
-    effects: [
+Scale and rotate an element on hover. The `fill: "both"` property keeps the effect visible while hovering:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "card",
+      trigger: "hover",
+      effects: [
         {
-            key: 'my-element',
-            keyframeEffect: {
-                name: 'twist',
-                keyframes: [
-                    { transform: 'scale(1) rotate(0deg)' },
-                    { transform: 'scale(1.1) rotate(5deg)' }
-                ]
-            },
-            duration: 200,
-            easing: 'ease-out'
-        }
-    ]
-}
+          keyframeEffect: {
+            name: "twist",
+            keyframes: [
+              { transform: "scale(1) rotate(0deg)" },
+              { transform: "scale(1.1) rotate(5deg)" },
+            ],
+          },
+          duration: 200,
+          easing: "ease-out",
+          fill: "both",
+        },
+      ],
+    },
+  ],
+};
 ```
+
+TODO ADD VISUAL DEMONSTRATION
+
+## Hover with separate source and target
+
+When a hover effect changes the size or position of the hovered element, the hit area shifts and causes flickering. To avoid this, use a parent element as the trigger source and target a child element with `selector`:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "card", // Target the card element
+      trigger: "hover",
+      effects: [
+        {
+          selector: ".card-image", // Select the image inside the card
+          keyframeEffect: {
+            name: "zoom",
+            keyframes: [{ transform: "scale(1.15)" }],
+          },
+          duration: 300,
+          easing: "ease-out",
+          fill: "both",
+        },
+      ],
+    },
+  ],
+};
+```
+
+The `key` targets the card container that triggers the effect, while `selector` targets the `.card-image` child that animates. The container's hit area stays stable.
 
 ## Click to toggle state
 
-```javascript
-{
-    key: 'my-button',
-    trigger: 'click',
-    params: { method: 'toggle' },
-    effects: [
+Use a transition effect with `stateAction: "toggle"` to toggle CSS properties on click:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "accordion-header",
+      trigger: "click",
+      effects: [
         {
-            key: 'my-content',
-            effectId: 'expand',
-        }
-    ]
-}
+          key: "accordion-content",
+          stateAction: "toggle",
+          transition: {
+            duration: 300,
+            easing: "ease-out",
+            styleProperties: [
+              { name: "maxHeight", value: "500px" },
+              { name: "opacity", value: "1" },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+};
 ```
 
-## Entrance animation on viewport entry
+The Interaction's `key` targets the accordion header to trigger the effect, while the effect's `key` targets the accordion's content to animate.
 
-```javascript
-{
-    key: 'my-element',
-    trigger: 'viewEnter',
-    effects: [
+## Entrance animation with FOUC prevention
+
+Entrance animations can cause a Flash of Unstyled Content (FOUC), a brief flash during which elements appear in their final state, before the animation framework applies the starting keyframe. To prevent this, use [`generate()`](ADDLINK) to create critical CSS and mark elements with `initial`:
+
+```ts
+import { generate } from "@wix/interact/web";
+
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter",
+      effects: [
         {
-            key: 'my-element',
-            namedEffect: { type: 'FadeIn' },
-            duration: 800,
-            easing: 'ease-out'
-        }
-    ]
-}
+          namedEffect: { type: "FadeIn" },
+          duration: 1000,
+          triggerType: "once",
+        },
+      ],
+    },
+  ],
+};
+
+// Generate critical CSS and inject into <head>
+const css = generate(config);
+const style = document.createElement("style");
+style.textContent = css;
+document.head.appendChild(style);
 ```
 
-<Callout type="info">
-  Using `namedEffect` requires registering effects first with
-  `Interact.registerEffects(...)` (presets from `@wix/motion-presets` or your
-  own custom effects). See [Installation](#optional-animation-presets).
-</Callout>
+Then mark the element with `initial` in your markup:
 
-<Callout type="tip">
-  To prevent a flash of content before entrance animations start, use the
-  `generate()` function to create CSS that hides elements until their animation
-  triggers. See [Entrance
-  Animations](../examples/entrance-animations.md#preventing-flash-of-unstyled-content-fouc)
-  for details.
-</Callout>
+<Tabs>
+  <Tab title="React">
+
+  ```tsx
+  <Interaction tagName="div" interactKey="hero" initial={true}>
+    <h1>Welcome</h1>
+  </Interaction>
+  ```
+
+  </Tab>
+  <Tab title="Web Components">
+
+  ```html
+  <interact-element data-interact-key="hero" data-interact-initial="true">
+    <section class="hero">...</section>
+  </interact-element>
+  ```
+
+  </Tab>
+</Tabs>
+
+<Note>
+You must use both `generate()` CSS and the `initial` attribute. Using only one of them has no effect.
+
+This pattern only applies to `viewEnter` Interactions with `triggerType: "once"` where the source and target are the same element.
+</Note>
+
+## Accessible triggers
+
+Use `activate` instead of `click` to respond to keyboard Enter/Space, and `interest` instead of `hover` to also respond to keyboard focus:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "nav-item",
+      trigger: "interest",
+      effects: [
+        {
+          keyframeEffect: {
+            name: "underline",
+            keyframes: [
+              { backgroundSize: "0% 2px" },
+              { backgroundSize: "100% 2px" },
+            ],
+          },
+          duration: 200,
+          fill: "both",
+        },
+      ],
+    },
+    {
+      key: "menu-toggle",
+      trigger: "activate",
+      effects: [
+        {
+          key: "menu-panel",
+          stateAction: "toggle",
+          transition: {
+            duration: 300,
+            easing: "ease-out",
+            styleProperties: [{ name: "transform", value: "translateX(0)" }],
+          },
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Scroll-driven animation with sticky container
+
+For long scroll-driven animations, use a tall wrapper with a sticky child. The wrapper's height defines the scroll distance, and the `contain` range animates only while the child is stuck. 
+
+For example, in this HTML structure:
+
+```html
+<div style="height: 300vh;">
+  <div data-interact-key="sticky-section"
+       style="position: sticky; top: 0; height: 100vh;">
+    <div class="animated-content">...</div>
+  </div>
+</div>
+```
+
+Use the following pattern:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "sticky-section",
+      trigger: "viewProgress",
+      effects: [
+        {
+          selector: ".animated-content",
+          keyframeEffect: {
+            name: "progress-reveal",
+            keyframes: [
+              { opacity: "0", transform: "translateY(40px)" },
+              { opacity: "1", transform: "translateY(0)" },
+            ],
+          },
+          rangeStart: { name: "contain" },
+          rangeEnd: { name: "contain", offset: { value: 50, unit: "percentage" } },
+          fill: "both",
+        },
+      ],
+    },
+  ],
+};
+```
+
+## Pointer-driven 2D effect
+
+For 2-axis pointer tracking, use a mouse-category [named effect](ADDLINK) or 2 separate Interactions with `composite: "add"`.
+
+### Track using a named effect
+
+Use a named effect to track the pointer:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "card",
+      trigger: "pointerMove",
+      params: { hitArea: "self" },
+      effects: [
+        {
+          namedEffect: { type: "Tilt3DMouse" },
+        },
+      ],
+    },
+  ],
+};
+```
+
+### Track with independent axes
+
+You can also track the pointer using 2 keyframe-based Interactions:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "card",
+      trigger: "pointerMove",
+      params: { hitArea: "self", axis: "x" },
+      effects: [
+        {
+          keyframeEffect: {
+            name: "tilt-x",
+            keyframes: [
+              { transform: "rotateY(-15deg)" },
+              { transform: "rotateY(0deg)" },
+              { transform: "rotateY(15deg)" },
+            ],
+          },
+          fill: "both",
+        },
+      ],
+    },
+    {
+      key: "card",
+      trigger: "pointerMove",
+      params: { hitArea: "self", axis: "y" },
+      effects: [
+        {
+          keyframeEffect: {
+            name: "tilt-y",
+            keyframes: [
+              { transform: "rotateX(15deg)" },
+              { transform: "rotateX(0deg)" },
+              { transform: "rotateX(-15deg)" },
+            ],
+          },
+          composite: "add",
+          fill: "both",
+        },
+      ],
+    },
+  ],
+};
+```
+
+The second Interaction uses `composite: "add"` so both transforms apply without replacing each other.
+
+## See also
+
+- [About the config object](configuration/configuration/intro)
+- [Triggers](configuration/triggers/intro)
+- [Effects and animations](configuration/effects/intro)
+- [Conditions](configuration/conditions/intro)

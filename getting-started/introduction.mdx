@@ -1,74 +1,46 @@
 ---
 title: "About Interact"
-# description: "Learn what Wix Interact is and how it works"
 ---
 
-Interact is a library for creating web animations and effects triggered by user actions such as clicking, hovering, or scrolling. You can use it to build responsive animations that interact with different elements on the page, work across different devices, and conform to accessibility preferences.
+Interact is a library for creating web animations and effects triggered by user actions on the page. Use it to build responsive animations that work across different elements and adapt to different devices. You can use Interact with vanilla JavaScript, [integrate it with popular frameworks](ADDLINK), or use [pre-made effects](ADDLINK) right out of the box. 
+
+Interact also supports [accessible](ADDLINK) triggers, so your animations work for all users. 
 
 <Info>
-  Interact comes bundled with `@wix/motion`, its default animation engine.
-  However, you can choose to use Interact with other animation engines of your
-  choice.
+  Interact is powered by `@wix/motion`, a core animation engine built on the Web Animations API. Motion comes bundled with Interact, so you don't need to install it separately.
 </Info>
 
 ## Anatomy of an Interaction
 
-An Interaction defines a cause-and-effect relationship between an action and a visual change on the page. Each Interaction has a [`config` object](ADDLINK) that defines what the interaction does, what triggers it, and which elements it affects.
+An Interaction defines a cause-and-effect relationship between an action and a visual change on the page. Each Interaction has a [`config` object](ADDLINK) that defines what the Interaction does, what triggers it, and which elements it affects. It has a `key` that selects the element it applies to, a `trigger` that specifies what initiates it, and a list of `effects` that run when the trigger occurs. 
 
-The Interaction's `config` includes at least the following properties:
+You can also set up [sequences](ADDLINK) for coordinating staggered animations, as well as [conditions](ADDLINK) that determine when Interactions run.
 
-- `key`: Unique identifier for the page element the interaction applies to
-- `trigger`: User action that initiates the interaction, such as clicking, hovering, or scrolling
-- `effects`: Animation or visual change that occurs on the page element when the trigger activates
+{/* !-- TODO: Verify — API ref marks InteractConfig.effects as required, rules show it as optional. Check source types.  */}
 
-Learn more about [configuring an interaction](ADDLINK).
+Learn more about [configuring an Interaction](ADDLINK).
 
 ## Reusing effects
 
-You can define effects once in the top-level `effects` object, and then reuse them across multiple interactions:
+To avoid duplication when the same animation applies to different elements or triggers, you can define effects once in the top-level `effects` object, and reference them by their `effectId` across multiple Interactions. 
 
-```typescript
-import { Interact } from "@wix/interact";
-
-const config = {
-  effects: {
-    "fade-in": {
-      // Define a reusable effect called "fade-in"
-      duration: 1000,
-      keyframeEffect: {
-        name: "fade-in", // Set up its ID
-        keyframes: [{ opacity: 0 }, { opacity: 1 }],
-      },
-    },
-  },
-  interactions: [
-    {
-      key: "hero",
-      trigger: "viewEnter",
-      effects: [{ effectId: "fade-in" }], // Reference the reusable effect by its ID
-    },
-  ],
-};
-
-Interact.create(config);
-```
-
-TODO ADD VISUAL DEMONSTRATION
+Learn more about [organizing your configuration](ADDLINK). 
 
 <Tip>
-  Wix also provides a library of pre-made animations you can import and use in
-  your Interactions. Learn more about [named effects](ADDLINK).
+  Instead of writing your own effects using keyframes, you can use [named effects](ADDLINK), which are pre-made animations from the `@wix/motion-presets` package.
 </Tip>
 
 ## TypeScript support
 
-Interact provides full TypeScript support. The `InteractConfig` type validates your configuration, including trigger names, effect properties, and more:
+Interact provides full TypeScript support. Use the `InteractConfig` type to validate your configuration, including trigger names, effect properties, and more. The following example creates a fade-in animation triggered when an element enters the viewport:
 
 <Tabs>
   <Tab title="React">
 
-```typescript
-import { Interact, InteractConfig, Interaction } from "@wix/interact/react";
+```tsx
+import { useEffect } from "react";
+import { Interact, Interaction } from "@wix/interact/react";
+import type { InteractConfig } from "@wix/interact/react";
 
 const config: InteractConfig = {
   interactions: [
@@ -89,7 +61,57 @@ const config: InteractConfig = {
   effects: {},
 };
 
-const instance = Interact.create(config);
+function App() {
+  useEffect(() => {
+    const instance = Interact.create(config);
+    return () => instance.destroy();
+  }, []);
+
+  // The <Interaction> component binds the DOM element to the "hero" key.
+  return (
+    <Interaction tagName="section" interactKey="hero" className="hero">
+      <h1>Welcome</h1>
+    </Interaction>
+  );
+}
+```
+
+  </Tab>
+  <Tab title="Web Components">
+
+```typescript
+import { Interact } from "@wix/interact/web";
+import type { InteractConfig } from "@wix/interact/web";
+
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter",
+      effects: [
+        {
+          duration: 1000,
+          keyframeEffect: {
+            name: "fade",
+            keyframes: [{ opacity: 0 }, { opacity: 1 }],
+          },
+        },
+      ],
+    },
+  ],
+  effects: {},
+};
+
+Interact.create(config);
+```
+
+```html
+<!-- The <interact-element> custom element binds the DOM element to the "hero" key. -->
+<interact-element data-interact-key="hero">
+  <section class="hero">
+    <h1>Welcome</h1>
+  </section>
+</interact-element>
 ```
 
   </Tab>
@@ -97,6 +119,31 @@ const instance = Interact.create(config);
 
 ```typescript
 import { Interact } from "@wix/interact";
+import type { InteractConfig } from "@wix/interact";
+
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter",
+      effects: [
+        {
+          duration: 1000,
+          keyframeEffect: {
+            name: "fade",
+            keyframes: [{ opacity: 0 }, { opacity: 1 }],
+          },
+        },
+      ],
+    },
+  ],
+  effects: {},
+};
+
+{/* TODO: Verify add() API — source exports it as a standalone function, but rules show instance.add(). Confirm with dev team. */}
+const instance = Interact.create(config);
+const heroElement = document.querySelector(".hero");
+instance.add(heroElement, "hero");
 ```
 
   </Tab>
@@ -104,10 +151,6 @@ import { Interact } from "@wix/interact";
 
 ## See also
 
-- [Set Up Your First Interaction](/getting-started/quickstart)
-- [Named Effects](/getting-started/named-effects)
-- [Configuration](/configuration/configuration/intro)
-
-```
-
-```
+- [Set up your first Interaction](ADDLINK)
+- [Named effects](ADDLINK)
+- [Configuration](ADDLINK)

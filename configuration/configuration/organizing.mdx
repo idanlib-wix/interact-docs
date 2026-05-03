@@ -1,15 +1,13 @@
 ---
-title: "Organizing your interactions"
-description: "Organize your interactions"
+title: "Organizing Your Interactions"
+description: "Keep your Interactions organized as your project scales."
 ---
 
-## Organizing your interactions
+As your project grows, managing multiple Interactions in a single config can become hard to read and maintain. The following patterns help you keep your configurations organized.
 
-Having multiple interactions in a single project can become difficult to manage. Here are some best practices to keeping your interactions organized:
+## Inline effects
 
-### Inline Effects
-
-For simple interactions, define effects directly in the interaction's `effects` array:
+For simple Interactions, define effects directly in the `config` object's `effects` array. This keeps everything in one place and works well when you don't need to share effects across Interactions.
 
 ```ts
 const simpleConfig: InteractConfig = {
@@ -19,12 +17,13 @@ const simpleConfig: InteractConfig = {
       trigger: "hover",
       effects: [
         {
-          key: "button-1",
-          namedEffect: {
-            type: "Scale",
+          keyframeEffect: {
+            name: "scale-up",
+            keyframes: [{ transform: "scale(1.05)" }],
           },
           duration: 200,
           easing: "ease-out",
+          fill: "both",
         },
       ],
     },
@@ -49,9 +48,9 @@ const simpleConfig: InteractConfig = {
 };
 ```
 
-### Reusable Effects
+## Reusable effects
 
-For larger projects, define effects separately and reference them:
+When multiple Interactions share effects, define them in the top-level `effects` object and reference them by `effectId`:
 
 ```ts
 const complexConfig: InteractConfig = {
@@ -101,19 +100,19 @@ const complexConfig: InteractConfig = {
       trigger: "hover",
       effects: [
         {
-          key: "btn-primary",
-          effectId: "button-hover", // Reference to reusable effect
+          effectId: "button-hover",
+          fill: "both",
         },
       ],
     },
     {
       key: "product-card",
       trigger: "viewEnter",
-      params: { type: "once", threshold: 0.3 },
+      params: { threshold: 0.3 },
       effects: [
         {
-          key: "product-card",
           effectId: "card-entrance",
+          triggerType: "once",
         },
       ],
     },
@@ -121,22 +120,22 @@ const complexConfig: InteractConfig = {
 };
 ```
 
-### Feature-Based Organization
+## Feature-based organization
 
-Organize by features or components:
+For larger projects, organize Interactions by feature or component in separate files:
 
-```typescript
+```ts
 // buttons.ts
 export const buttonInteractions = [
   {
     key: "btn-primary",
     trigger: "hover",
-    effects: [{ key: "btn-primary", effectId: "button-hover" }],
+    effects: [{ effectId: "button-hover", fill: "both" }],
   },
   {
     key: "btn-secondary",
     trigger: "hover",
-    effects: [{ key: "btn-secondary", effectId: "button-hover-secondary" }],
+    effects: [{ effectId: "button-hover-secondary", fill: "both" }],
   },
 ];
 
@@ -145,8 +144,7 @@ export const cardInteractions = [
   {
     key: "card",
     trigger: "viewEnter",
-    params: { type: "once" },
-    effects: [{ key: "card", effectId: "card-entrance" }],
+    effects: [{ effectId: "card-entrance", triggerType: "once" }],
   },
 ];
 
@@ -163,11 +161,11 @@ const config: InteractConfig = {
 };
 ```
 
-### Component-Specific Configurations
+## Component-specific configurations
 
-Create configurations for specific components:
+For reusable components, create factory functions that return configs:
 
-```typescript
+```ts
 // NavbarConfig.ts
 export const createNavbarConfig = (navbarId: string): InteractConfig => ({
   effects: {
@@ -203,3 +201,9 @@ export const createNavbarConfig = (navbarId: string): InteractConfig => ({
 const navConfig = createNavbarConfig("main-nav");
 Interact.create(navConfig);
 ```
+
+## See also
+
+- [About the config object](configuration/configuration/intro)
+- [Common patterns](configuration/configuration/common-patterns)
+- [Selecting elements](configuration/configuration/selecting-elements)
