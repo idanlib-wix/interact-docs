@@ -1,16 +1,118 @@
 ---
 title: "Named Effects"
-description: "Use premade animation presets in your interactions"
+description: "Use pre-made animations in your Interactions"
 ---
 
-Named effects are animation presets made by Wix. Instead of writing your own animations, you can use named effects to add polished animations to your Interactions with minimal configuration.
+Named effects are pre-made animations from the `@wix/motion-presets` package that let you add polished animations to your Interactions without writing custom keyframes.
 
-Named effects cover a range of animation types, each designed for a different trigger. Some of the named effects include:
+## Available named effects
 
-- **Entrance**: Single-shot reveals when an element enters the viewport, such as `FadeIn`, `BounceIn`, `ArcIn`. They are triggered by the `viewEnter` trigger.
-- **Scroll**: Scroll-driven effects tied to viewport position, such as `ParallaxScroll`, `FadeScroll`, `GrowScroll`. They are triggered by the `viewProgress` trigger.
-- **Mouse**: Pointer-driven effects that respond to cursor movement, such as `Tilt3DMouse`, `TrackMouse`, `ScaleMouse`. They are triggered by the `pointerMove` trigger.
-- **Ongoing**: Looping animations for continuous attention, such as `Pulse`, `Spin`, `Wiggle`. They are compatible with `hover`, `click`, or any trigger.
+Named effects are organized by category, each designed for a specific trigger type.
+
+### Entrance effects
+
+Entrance effects are single-shot reveal animations triggered by the `viewEnter` trigger. These effects play once when an element enters the viewport:
+
+- `ArcIn`
+- `BlurIn`
+- `BounceIn`
+- `CurveIn`
+- `DropIn`
+- `ExpandIn`
+- `FadeIn`
+- `FlipIn`
+- `FloatIn`
+- `FoldIn`
+- `GlideIn`
+- `RevealIn`
+- `ShapeIn`
+- `ShuttersIn`
+- `SlideIn`
+- `SpinIn`
+- `TiltIn`
+- `TurnIn`
+- `WinkIn`
+
+### Ongoing effects
+
+Ongoing effects are looping animations compatible with all trigger types. Use them for continuous attention effects:
+
+- `Bounce`
+- `Breathe`
+- `Cross`
+- `DVD`
+- `Flash`
+- `Flip`
+- `Fold`
+- `Jello`
+- `Poke`
+- `Pulse`
+- `Rubber`
+- `Spin`
+- `Swing`
+- `Wiggle`
+
+### Scroll effects
+
+Scroll-driven animations are triggered by the `viewProgress` trigger. The element's scroll position controls the animation progress:
+
+- `ArcScroll`
+- `BlurScroll`
+- `FadeScroll`
+- `FlipScroll`
+- `GrowScroll`
+- `MoveScroll`
+- `PanScroll`
+- `ParallaxScroll`
+- `RevealScroll`
+- `ShapeScroll`
+- `ShrinkScroll`
+- `ShuttersScroll`
+- `SkewPanScroll`
+- `SlideScroll`
+- `Spin3dScroll`
+- `SpinScroll`
+- `StretchScroll`
+- `TiltScroll`
+- `TurnScroll`
+
+<Warning>
+Scroll named effects require a `range` option set to `'in'`, `'out'`, or `'continuous'`. Omitting `range` can cause unexpected behavior.
+</Warning>
+
+### Background scroll effects
+
+Scroll-driven background animations triggered by the `viewProgress` trigger. They apply parallax and transformation effects to background elements.
+
+- `BgCloseUp`
+- `BgFade`
+- `BgFadeBack`
+- `BgFake3D`
+- `BgPan`
+- `BgParallax`
+- `BgPullBack`
+- `BgReveal`
+- `BgRotate`
+- `BgSkew`
+- `BgZoom`
+- `ImageParallax`
+
+### Mouse effects
+
+Pointer-driven animations triggered by `pointerMove`. They respond to cursor movement over elements or the viewport:
+
+- `AiryMouse`
+- `BlobMouse`
+- `BlurMouse`
+- `BounceMouse`
+- `CustomMouse`
+- `ScaleMouse`
+- `SkewMouse`
+- `SpinMouse`
+- `SwivelMouse`
+- `Tilt3DMouse`
+- `Track3DMouse`
+- `TrackMouse`
 
 ## Set up a named effect
 
@@ -27,17 +129,27 @@ To use a named effect, you need to:
 
   </Step>
   <Step title="Register effects">
-    Import the named effects you want to use, and register them with Interact:
+    Import the named effects you want to use, and register them with Interact. You can import them selectively or register all available effects:
 
     ```typescript
+    // Selective import (recommended for smaller bundles)
     import { FadeIn, BounceIn } from "@wix/motion-presets";
-
     Interact.registerEffects({ FadeIn, BounceIn });
     ```
 
+    ```typescript
+    // Full import (registers all named effects)
+    import * as presets from "@wix/motion-presets";
+    Interact.registerEffects(presets);
+    ```
+
+    <Note>
+    You must call [`registerEffects()`](ADDLINK) before calling [`Interact.create()`](ADDLINK).
+    </Note>
+
   </Step>
-  <Step title="Specify a named effect in your Interaction's config">
-    Specify the effect name as the `type` of the object in the `namedEffect` property.
+  <Step title="Use a named effect in your config">
+    In the Interaction's `effects` array, set the `type` property inside the `namedEffect` object to the name of the effect you want to use:
 
     <Tabs>
       <Tab title="React">
@@ -87,7 +199,7 @@ To use a named effect, you need to:
       import { Interact } from "@wix/interact/web";
       import { FadeIn } from "@wix/motion-presets";
 
-      Interact.registerEffects({ FadeIn }); // TODO registerEffects() is not in API ref! Typedoc doesn't pick it up. Why?
+      Interact.registerEffects({ FadeIn });
 
       const config = {
         interactions: [
@@ -108,26 +220,62 @@ To use a named effect, you need to:
       ```
 
       </Tab>
+      <Tab title="JavaScript">
+
+      ```typescript
+      import { Interact } from "@wix/interact";
+      import { FadeIn } from "@wix/motion-presets";
+
+      Interact.registerEffects({ FadeIn });
+
+      const config = {
+        interactions: [
+          {
+            key: "hero",
+            trigger: "viewEnter",
+            effects: [
+              {
+                namedEffect: { type: "FadeIn" },
+                duration: 1000,
+              },
+            ],
+          },
+        ],
+      };
+
+      // TODO: Verify add() API — source exports it as a standalone function, but rules show instance.add(). Confirm with dev team.
+      const instance = Interact.create(config);
+      const heroElement = document.querySelector(".hero");
+      instance.add(heroElement, "hero");
+      ```
+
+      </Tab>
     </Tabs>
 
+The resulting effect looks like this: 
+
+TODO ADD VISUAL DEMONSTRATION
   </Step>
 </Steps>
 
-TODO ADD VISUAL DEMONSTRATION
 
 ## Customize a named effect
 
-Many named effects accept optional parameters that let you control how the animation looks and behaves. Common parameters include:
+Many named effects accept optional parameters that let you control how the animation looks and behaves. Available parameters vary by category:
 
-| Parameter   | Description                             | Example values                           |
-| ----------- | --------------------------------------- | ---------------------------------------- |
-| `direction` | Where the animation originates          | `"top"`, `"bottom"`, `"left"`, `"right"` |
-| `power`     | Intensity of the effect                 | `"soft"`, `"medium"`, `"hard"`           |
-| `speed`     | Movement speed for scroll-based effects | `0.5`, `1`, `2`                          |
+| Category | Parameter | Description | Example values |
+| -------- | --------- | ----------- | -------------- |
+| Entrance | `direction` | Where the animation originates. | `"top"`, `"bottom"`, `"left"`, `"right"` |
+| Entrance | `power` | Intensity of the effect. | `"soft"`, `"medium"`, `"hard"` |
+| Scroll | `range` | When the animation plays relative to scroll position (required). | `"in"`, `"out"`, `"continuous"` |
+| Scroll | `speed` | Movement speed. | `0.5`, `1`, `2` |
 
-To customize the named effect, specify these parameters in the `namedEffect` object:
+Each named effect supports different parameters. Learn more about [named effects](ADDLINK).
+
+To customize a named effect, specify the named effect's `type` along with the parameters you want to customize. For example, this custom effect `FadeIn` starts softly from the left:
 
 ```typescript
+// Inside your config's interactions[].effects array
 effects: [
   {
     namedEffect: {
@@ -142,10 +290,14 @@ effects: [
 
 TODO ADD VISUAL DEMONSTRATION
 
-Learn more about [customizing named effects](ADDLINK).
+<Note>
+You can specify only the parameters you want to customize. Omitting a parameter falls back to its default value. 
+</Note>
+
+To learn more about customizing named effects, see the [Named Effects reference](ADDLINK).
 
 ## See also
 
 - [About Wix Interact](/getting-started/introduction)
-- [Set Up Your First Interaction](/getting-started/quickstart)
-- [Effects and Animations](/configuration/effects/intro)
+- [Set up your first Interaction](/getting-started/quickstart)
+- [Effects and animations](/configuration/effects/intro)

@@ -24,15 +24,15 @@
           {
             "group": "Configuration",
             "pages": [
-              {
-                "group": "Configuration",
-                "pages": [
-                  "configuration/configuration/intro",
-                  "configuration/configuration/selecting-elements",
-                  "configuration/configuration/organizing",
-                  "configuration/configuration/common-patterns"
-                ]
-              },
+              "configuration/configuration/intro",
+              "configuration/configuration/selecting-elements",
+              "configuration/configuration/organizing",
+              "configuration/configuration/common-patterns"
+            ]
+          },
+          {
+            "group": "Triggers and Effects",
+            "pages": [
               {
                 "group": "Triggers",
                 "pages": [
@@ -57,7 +57,12 @@
                   "configuration/effects/transition",
                   "configuration/effects/custom"
                 ]
-              },
+              }
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
               {
                 "group": "Conditions and Media Queries",
                 "expanded": false,

@@ -1,69 +1,183 @@
 ---
-title: "Introduction"
-description: "About interactions"
+title: "About the Config Object"
+description: "The `InteractConfig` object defines Interactions, effects, and conditions."
 ---
 
-An [interaction](ADDLINK) is a web animation triggered by some user interaction on the screen. Each interaction defines a complete cause-and-effect relationship: when the trigger occurs, the animation runs on the selected web element.
+An Interaction is an animation that plays on the page in response to an action such as clicking, hovering, or scrolling. You define Interactions in an `InteractConfig` object and pass it to [`Interact.create()`](ADDLINK). The config object is a single, declarative place to define all the Interactions on a page: what triggers them, the elements they target, and how they animate. 
 
-You can define interactions to run when one or more triggers occurs, define reusable [effects](ADDLINK), and specify [conditions](ADDLINK) to determine when an interaction runs.
+## Structure
 
-## Configuration Structure
-
-To define interactions, set up the [`config` object](ADDLINK) and specify it to the Interact class's [`create()`](ADDLINK):
-
-// TODO CODE GROUPS for various flavors/ entry points?
+The `InteractConfig` object has the following top-level properties:
 
 ```ts
 import type { InteractConfig } from "@wix/interact";
 
 const config: InteractConfig = {
+  interactions: [
+    // Array of Interaction definitions.
+  ],
   effects: {
-    // Reusable effect definitions
+    // Reusable effect definitions.
+  },
+  sequences: {
+    // Reusable sequence definitions for staggered animations.
   },
   conditions: {
-    // Reusable condition definitions
+    // Named conditions that specify when an Interaction runs.
   },
+};
+```
+
+{/* TODO: Verify — API ref marks InteractConfig.effects as required, rules show it as optional. Check source types. */}
+
+## Properties
+
+Each Interaction in the `interactions` array maps a selected element to a trigger and one or more effects:
+
+```ts
+{
+  key: "hero",            // Element to apply the animation to.
+  trigger: "viewEnter",   // Action that starts the animation.
+  effects: [              // Visual changes to apply.
+    {
+      namedEffect: { type: "FadeIn" },
+      duration: 1000,
+    },
+  ],
+}
+```
+
+You can further customize the Interaction by specifying additional parameters:
+
+- `params`: Trigger-specific settings, such as the hit area for pointer triggers or the threshold for viewport triggers.
+- `conditions`: Array of condition IDs that the Interaction checks before running. All listed conditions must pass before the Interaction activates.
+- `selector`: CSS selector that targets a child element in the element matched by `key`.
+- `listContainer`: CSS selector for a container whose children animate as a list. Use this for staggered animations across repeated elements.
+- `sequences`: Interaction-level sequence definitions for coordinating staggered animations in this Interaction.
+
+Learn more about [selecting elements](configuration/configuration/selecting-elements).
+
+## Config examples
+
+The following examples show minimal configs for common trigger types.
+
+### Hover effect
+
+Scale an element on hover:
+
+```ts
+const config: InteractConfig = {
   interactions: [
-    // Array of interaction definitions
+    {
+      key: "card",
+      trigger: "hover",
+      effects: [
+        {
+          keyframeEffect: {
+            name: "scale-up",
+            keyframes: [{ scale: 1.05 }],
+          },
+          duration: 300,
+          easing: "ease-out",
+          fill: "both",
+        },
+      ],
+    },
   ],
 };
 ```
 
-## Performance Considerations
+TODO ADD VISUAL DEMONSTRATION
 
-### Lazy Loading Configurations
+### Entrance animation
 
-Load configurations on demand:
+Fade in an element when it enters the viewport:
 
-```typescript
-const loadFeatureConfig = async (
-  featureName: string,
-): Promise<InteractConfig> => {
-  const module = await import(`./features/${featureName}/interactions.js`);
-  return module.default;
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "hero",
+      trigger: "viewEnter",
+      effects: [
+        {
+          namedEffect: { type: "FadeIn" },
+          duration: 1000,
+          triggerType: "once",
+        },
+      ],
+    },
+  ],
 };
-
-// Usage
-const heroConfig = await loadFeatureConfig("hero");
-Interact.create(heroConfig);
 ```
 
-## Real-World Example: E-commerce Product Page
+TODO ADD VISUAL DEMONSTRATION
 
-```typescript
+### Scroll-driven animation
+
+Animate an element based on scroll progress:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "progress-bar",
+      trigger: "viewProgress",
+      effects: [
+        {
+          namedEffect: { type: "GrowScroll", range: "continuous" },
+          fill: "both",
+        },
+      ],
+    },
+  ],
+};
+```
+
+TODO ADD VISUAL DEMONSTRATION
+
+### Pointer-driven animation
+
+Respond to mouse movement over an element:
+
+```ts
+const config: InteractConfig = {
+  interactions: [
+    {
+      key: "card",
+      trigger: "pointerMove",
+      params: { hitArea: "self" },
+      effects: [
+        {
+          namedEffect: { type: "Tilt3DMouse" },
+        },
+      ],
+    },
+  ],
+};
+```
+
+TODO ADD VISUAL DEMONSTRATION
+
+## Real-world example: e-commerce product page
+
+This example combines reusable effects, conditions, and multiple Interactions in a single config:
+
+```ts
 const productPageConfig: InteractConfig = {
   effects: {
-    "product-image-zoom": {
+    "image-zoom": {
       keyframeEffect: {
-        name: "product-image-zoom",
+        name: "image-zoom",
         keyframes: [{ transform: "scale(1)" }, { transform: "scale(1.1)" }],
       },
       duration: 300,
       easing: "ease-out",
+      fill: "both",
     },
-    "add-to-cart-success": {
+    "cart-success": {
       keyframeEffect: {
-        name: "add-to-cart-success",
+        name: "cart-success",
         keyframes: [
           { backgroundColor: "#ef4444", transform: "scale(1)" },
           { transform: "scale(1.05)" },
@@ -83,6 +197,7 @@ const productPageConfig: InteractConfig = {
       },
       duration: 500,
       easing: "ease-out",
+      triggerType: "once",
     },
   },
 
@@ -91,61 +206,38 @@ const productPageConfig: InteractConfig = {
       type: "media",
       predicate: "(min-width: 1024px)",
     },
-    "touch-device": {
-      type: "media",
-      predicate: "(hover: none)",
-    },
   },
 
   interactions: [
-    // Product image hover (desktop only)
     {
       key: "product-image",
       trigger: "hover",
       conditions: ["desktop"],
       effects: [
         {
-          key: "product-image",
           selector: "img",
-          effectId: "product-image-zoom",
+          effectId: "image-zoom",
         },
       ],
     },
-
-    // Add to cart success animation
     {
       key: "add-to-cart-btn",
       trigger: "click",
-      effects: [
-        {
-          key: "add-to-cart-btn",
-          effectId: "add-to-cart-success",
-        },
-      ],
-    },
-
-    // Staggered review animations
-    {
-      key: "review-1",
-      trigger: "viewEnter",
-      params: { type: "once", threshold: 0.2 },
-      effects: [
-        {
-          key: "review-1",
-          effectId: "review-entrance",
-          delay: 0,
-        },
-      ],
+      effects: [{ effectId: "cart-success" }],
     },
     {
-      key: "review-2",
+      key: "reviews",
       trigger: "viewEnter",
-      params: { type: "once", threshold: 0.2 },
-      effects: [
+      params: { threshold: 0.2 },
+      sequences: [
         {
-          key: "review-2",
-          effectId: "review-entrance",
-          delay: 100,
+          offset: 100,
+          effects: [
+            {
+              effectId: "review-entrance",
+              listContainer: ".review-list",
+            },
+          ],
         },
       ],
     },
@@ -153,20 +245,11 @@ const productPageConfig: InteractConfig = {
 };
 ```
 
-## Best Practices
+ADD VISUAL DEMONSTRATION
 
-### Configuration Organization
+## See also
 
-1. **Start simple** - Use inline effects for prototypes
-2. **Extract reusable effects** as your project grows
-3. **Group by feature** rather than by type
-
-### Accessibility
-
-1. **Use `activate` instead of `click`** for keyboard accessibility (Enter/Space)
-2. **Use `interest` instead of `hover`** for keyboard accessibility (Focus)
-3. **Or enable `allowA11yTriggers` globally** to make existing triggers accessible
-
-### Performance Tips
-
-1. **Reuse effects** instead of duplicating them 2. **Use conditions** to avoid unnecessary animations 3. **Lazy load** configurations for large applications 4. **Validate in development** to catch errors early
+- [Select elements](configuration/configuration/selecting-elements)
+- [Triggers](configuration/triggers/intro)
+- [Effects and animations](configuration/effects/intro)
+- [Conditions](configuration/conditions/intro)

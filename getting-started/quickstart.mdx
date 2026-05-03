@@ -1,23 +1,25 @@
 ---
 title: "Quickstart"
-description: "Set Up Your First Interaction"
+description: "Set up your first Interaction"
 ---
 
-Quickly set up your first animation with Interact. Here's how to create a hover animation that scales an image:
+In this quickstart, you create a hover Interaction that scales an image when a user hovers over it.
 
 ## Installation
+
+Install the Interact package:
 
 ```bash
 npm install @wix/interact
 ```
 
-## Supported frameworks
+## Entry points
 
-The `@wix/interact` package provides 3 entry points based on your use case:
+The `@wix/interact` package provides three entry points based on your use case:
 
 <Tabs>
   <Tab title="React">
-    When using React:
+    When using React, import the `Interact` and `Interaction` components:
 
     ```typescript
     import { Interact, Interaction } from "@wix/interact/react";
@@ -27,7 +29,7 @@ The `@wix/interact` package provides 3 entry points based on your use case:
 
   </Tab>
   <Tab title="Web Components">
-    When using Web Components:
+    When using Web Components, import the Interact class:
 
     ```typescript
     import { Interact } from "@wix/interact/web";
@@ -35,14 +37,16 @@ The `@wix/interact` package provides 3 entry points based on your use case:
 
   </Tab>
   <Tab title="JavaScript">
-    When using vanilla JavaScript:å
+    When using vanilla JavaScript, import the Interact class:
 
     ```typescript
-    import { Interact, add, remove } from "@wix/interact";
+    import { Interact } from "@wix/interact";
     ```
 
   </Tab>
 </Tabs>
+
+{/* TODO: Verify — API ref says create() returns void, but rules and examples store the return value as an Interact instance. */}
 
 ## Set up an Interaction
 
@@ -52,7 +56,9 @@ The `@wix/interact` package provides 3 entry points based on your use case:
 Use the `Interaction` React component to wrap the element you want to animate.
 
     <Steps>
-      <Step title="Configure the interaction">
+      <Step title="Configure the Interaction">
+
+    Define the `config` object with a `hover` trigger and a `scale` effect:
 
     ```tsx
     import React, { useEffect } from "react";
@@ -71,6 +77,7 @@ Use the `Interaction` React component to wrap the element you want to animate.
               },
               duration: 300,
               easing: "ease-out",
+              fill: "both",
             },
           ],
         },
@@ -80,7 +87,9 @@ Use the `Interaction` React component to wrap the element you want to animate.
     ```
 
       </Step>
-      <Step title="Create the interaction and render the component">
+      <Step title="Create the Interaction and render the component">
+
+    To bind the Interaction to the target element on the DOM, wrap the target element in an `Interaction` component, and call [`Interact.create()`](ADDLINK) inside a `useEffect()` hook:
 
     ```tsx
     function App() {
@@ -103,7 +112,7 @@ Use the `Interaction` React component to wrap the element you want to animate.
     export default App;
     ```
 
-    The `useEffect` cleanup method calls `instance.destroy()` to remove the interaction when the component unmounts.
+    In the `useEffect()` cleanup method, call `instance.destroy()` to remove the Interaction when the component unmounts.
 
       </Step>
     </Steps>
@@ -111,7 +120,7 @@ Use the `Interaction` React component to wrap the element you want to animate.
 </Tab>
   <Tab title="Web Components">
 
-Use the `interact-element` custom element to wrap the element you want to animate.
+Use the `interact-element` custom element to wrap the element you want to animate:
 
 <Steps>
     <Step title="Create the HTML structure">
@@ -127,7 +136,7 @@ Use the `interact-element` custom element to wrap the element you want to animat
     <body>
         <interact-element
         data-interact-key="my-image">
-        <img id="my-image" src="logo.png" alt="Logo" />
+        <img src="logo.png" alt="Logo" />
         </interact-element>
 
         <script type="module" src="./main.js"></script>
@@ -136,7 +145,9 @@ Use the `interact-element` custom element to wrap the element you want to animat
     ```
     </Step>
 
-  <Step title="Configure the interaction">
+  <Step title="Configure the Interaction">
+
+    Define the config object with a hover trigger and a scale effect, then create the Interaction:
 
 ```javascript
 // main.js
@@ -155,6 +166,7 @@ const config = {
           },
           duration: 300,
           easing: "ease-out",
+          fill: "both",
         },
       ],
     },
@@ -162,16 +174,91 @@ const config = {
   effects: {},
 };
 
-Interact.create(config);
+const instance = Interact.create(config);
 ```
 
   </Step>
   <Step title="Add cleanup">
-    Clean up interactions when the page unloads or on SPA navigation:
+    Clean up Interactions when the page unloads:
 
 ```javascript
 window.addEventListener("beforeunload", () => {
-  Interact.destroy();
+  instance.destroy();
+});
+```
+
+  </Step>
+</Steps>
+
+  </Tab>
+  <Tab title="JavaScript">
+
+Use the vanilla JavaScript entry point with [`add()`](ADDLINK) to bind elements after they exist in the DOM: 
+
+<Steps>
+    <Step title="Create the HTML structure">
+
+    Add the element you want to animate:
+
+    ```html
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>My First Interaction</title>
+    </head>
+    <body>
+        <div class="image-container">
+          <img id="my-image" src="logo.png" alt="Logo" />
+        </div>
+
+        <script type="module" src="./main.js"></script>
+    </body>
+    </html>
+    ```
+    </Step>
+
+  <Step title="Configure the Interaction and bind the element">
+
+    Define the config object, create the Interaction, and bind it to the target element using [`add()`](ADDLINK):
+
+```javascript
+// main.js
+import { Interact } from "@wix/interact";
+
+const config = {
+  interactions: [
+    {
+      key: "my-image",
+      trigger: "hover",
+      effects: [
+        {
+          keyframeEffect: {
+            name: "scale",
+            keyframes: [{ scale: 2 }],
+          },
+          duration: 300,
+          easing: "ease-out",
+          fill: "both",
+        },
+      ],
+    },
+  ],
+  effects: {},
+};
+
+// TODO: Verify add() API — source exports it as a standalone function, but rules show instance.add(). Confirm with dev team.
+const instance = Interact.create(config);
+const imageContainer = document.querySelector(".image-container");
+instance.add(imageContainer, "my-image");
+```
+
+  </Step>
+  <Step title="Add cleanup">
+    Clean up Interactions when the page unloads or when navigating to another component:
+
+```javascript
+window.addEventListener("beforeunload", () => {
+  instance.destroy();
 });
 ```
 
@@ -181,19 +268,17 @@ window.addEventListener("beforeunload", () => {
   </Tab>
 </Tabs>
 
-The image now scales up when you hover over it.
+The image now scales up when you hover over it and scales back down when you move the pointer away. The `hover` trigger automatically reverses the animation on pointer exit.
 
 TODO ADD VISUAL DEMONSTRATION
 
 <Tip>
-Instead of writing custom keyframes, you can also use named effects. These are pre-made animation presets created by Wix that you can import and use in your Interactions.
-
-Learn more about [named effects](ADDLINK).
-
+Instead of writing custom keyframes, you can use [named effects](ADDLINK), which are pre-made animations from the `@wix/motion-presets` package.
 </Tip>
 
 ## See also
 
-- [About Wix Interact](/getting-started/introduction)
-- [Named Effects](/getting-started/named-effects)
-- [Configuration](/configuration/configuration/intro)
+- [About Wix Interact](ADDLINK)
+- [Configuration](ADDLINK)
+- [Named Effects](ADDLINK)
+- [Integrations](ADDLINK)
