@@ -384,3 +384,73 @@ One of the following:
 </Accordion>
 
 </ResponseField>
+
+
+`{ effects: Record<string, InteractionTrigger & object[]>; interactionIds: Set<string>; selectors: Set<string>; sequences: Record<string, InteractionTrigger & object[]>; triggers: Interaction[]; } | undefined`
+
+<Accordion title="Properties">
+
+<ResponseField name="conditions" type="string[]">
+
+</ResponseField>
+
+<ResponseField name="key" type="string" required>
+
+</ResponseField>
+
+<ResponseField name="listContainer" type="string">
+
+</ResponseField>
+
+<ResponseField name="listItemSelector" type="string">
+
+</ResponseField>
+
+<ResponseField name="params" type="TriggerParams">
+
+
+
+<Accordion title="TriggerParams">
+One of the following:
+
+<Accordion title="ViewEnterParams">
+<ParamField body="inset" type="string">
+
+</ParamField>
+
+<ParamField body="threshold" type="number">
+
+</ParamField>
+
+<ParamField body="useSafeViewEnter" type="boolean">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="PointerMoveParams">
+<ParamField body="axis" type="&quot;x&quot; | &quot;y&quot;">
+
+</ParamField>
+
+<ParamField body="hitArea" type="&quot;root&quot; | &quot;self&quot;">
+
+</ParamField>
+</Accordion>
+
+<Accordion title="AnimationEndParams">
+<ParamField body="effectId" type="string" required>
+
+</ParamField>
+</Accordion>
+</Accordion>
+
+</ResponseField>
+
+<ResponseField name="selector" type="string">
+
+</ResponseField>
+
+<ResponseField name="trigger" type="&quot;hover&quot; | &quot;click&quot; | &quot;viewEnter&quot; | &quot;pageVisible&quot; | &quot;animationEnd&quot; | &quot;viewProgress&quot; | &quot;pointerMove&quot; | &quot;activate&quot; | &quot;interest&quot;" required>
+
+</ResponseField>
+</Accordion>

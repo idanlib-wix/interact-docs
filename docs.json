@@ -104,9 +104,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "api-reference/overview"
-            ]
+            "pages": ["api-reference/overview"]
           },
           {
             "group": "Interact",
@@ -158,7 +156,7 @@
             ]
           },
           {
-            "group": "Functions",
+            "group": "Standalone Functions",
             "pages": [
               "api-reference/functions/add",
               "api-reference/functions/generate",
@@ -166,7 +164,7 @@
             ]
           },
           {
-            "group": "Types",
+            "group": "Additional Types",
             "pages": [
               "api-reference/type-aliases/AnimationOptions",
               "api-reference/type-aliases/EventTriggerConfigToggle",
